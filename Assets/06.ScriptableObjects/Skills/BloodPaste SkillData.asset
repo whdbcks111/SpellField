@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bcc1fb7a7a110449cb010341bcdc35, type: 3}
+  m_Name: BloodPaste SkillData
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 1b507a7ba8113774ea4c5a56c10e5125, type: 3}
+  Name: "\uBE14\uB7EC\uB4DC \uD398\uC774\uC2A4\uD2B8"
+  DescriptionSummary: "\uC0AC\uBC29\uC73C\uB85C \uD54F\uBE5B \uAD6C\uCCB4\uB97C \uB0A0\uB824
+    \uD0C0\uACA9 \uC2DC \uCCB4\uB825\uC744 \uD68C\uBCF5\uD569\uB2C8\uB2E4."
+  _prefab: {fileID: 3658406521677521654, guid: 7ee6ce95cf494ca4d8bfaa53d020c9df, type: 3}
+  _baseDamage: 30
+  _damageMagicForceCoefficient: 0.4
+  _damageGrowth: 5
+  _hpAbsorb: 10
+  _baseManaCost: 50
+  _manaCostGrowth: 2
+  _baseCooldown: 5
+  _cooldownShrink: 0.4
+  _minCooldown: 3
+  _baseAngleCount: 7
+  _angleCountGrowth: 2
+  _maxAngleCount: 20

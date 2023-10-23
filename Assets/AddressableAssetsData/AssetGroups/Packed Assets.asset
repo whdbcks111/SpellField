@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Packed Assets
+  m_EditorClassIdentifier: 
+  m_GroupName: Packed Assets
+  m_Data:
+    m_SerializedData: []
+  m_GUID: d91809528c25a20479345800aafe70d6
+  m_SerializeEntries:
+  - m_GUID: 352b1a35bc2c3094989ab7c45b1c3284
+    m_Address: Weapons/DashSword
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f894771e75062d5458c5ca360ef44310
+    m_Address: Skills/Fireball
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1b365b9a0bdf5eb4eaf91b97db3188a2
+    m_Address: Weapons/Axe
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1c7e62144e0c10644a318e033be58102
+    m_Address: Assets/06.ScriptableObjects/Skills/LightArrow SkillData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3eea77c8d90b4047946522217a17936
+    m_Address: Weapons/Mage Wand
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa324c9bf5f19a1429b0fe7bc04abcb8
+    m_Address: Assets/06.ScriptableObjects/Weapons/Red Shield.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb9460d6ccdc5b34da0feb0036247ffe
+    m_Address: Assets/06.ScriptableObjects/Weapons/Dagger Tenbura.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49d6ed67c78e65146bcad3bf18e0de49
+    m_Address: Skills/Heal
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31cd9d39520ad8a43bca16dbecc7f2b7
+    m_Address: Assets/06.ScriptableObjects/Skills/BloodPaste SkillData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae1db97ffc15f0b41bbc6d5bddf0cae0
+    m_Address: Assets/06.ScriptableObjects/Weapons/Grand Wand.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b545a273754a74742940592b152ec63e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 444762a89b857734ba69ef3b615b967a, type: 2}
+    - {fileID: 11400000, guid: 18681b31b4d58b64cba1da3205283d7d, type: 2}

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f1d116579847c64ab66cd2952427a1d, type: 3}
+  m_Name: Red Shield
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: b748b00a08abefd45a4bb90d1932c9af, type: 3}
+  Name: "\uC801\uBC29\uD328"
+  DescriptionSummary: "\uD53C\uD574\uB97C \uD761\uC218\uD558\uB294 \uC77C\uC2DC\uC801\uC778
+    \uBC29\uC5B4\uB9C9\uC744 \uC0DD\uC131\uD569\uB2C8\uB2E4."
+  Description: "5\uCD08 \uB3D9\uC548 200\uB9CC\uD07C \uD53C\uD574\uB97C \uD761\uC218\uD558\uB294
+    \uBC29\uC5B4\uB9C9\uC744 \uC0DD\uC131\uD569\uB2C8\uB2E4."
+  DisplayObject: {fileID: 182028857364932153, guid: 0e7f534b568714f48acd1dfe75053d43, type: 3}
+  Cooldown: 10
+  StatModifiers:
+  - _statType: 7
+    ModifyType: 0
+    Value: 100
+  - _statType: 0
+    ModifyType: 1
+    Value: 1.2
+  - _statType: 11
+    ModifyType: 0
+    Value: 5
+  _shieldObject: {fileID: 1220215434128242373, guid: e4f6c12f80dcfe04581de3f42078a2d3, type: 3}
+  _shieldTime: 5
+  _shieldAmount: 140
