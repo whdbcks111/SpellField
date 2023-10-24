@@ -10480,7 +10480,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 950743643190209078, guid: 390e32c5e2a364543901c442c809828d, type: 3}
       propertyPath: m_Name
-      value: SkillUI_C
+      value: SkillUI_R
       objectReference: {fileID: 0}
     - target: {fileID: 2963044788095128117, guid: 390e32c5e2a364543901c442c809828d, type: 3}
       propertyPath: m_Sprite
@@ -10492,7 +10492,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5099477506790839411, guid: 390e32c5e2a364543901c442c809828d, type: 3}
       propertyPath: m_text
-      value: C
+      value: R
       objectReference: {fileID: 0}
     - target: {fileID: 8723972876635106183, guid: 390e32c5e2a364543901c442c809828d, type: 3}
       propertyPath: m_Pivot.x

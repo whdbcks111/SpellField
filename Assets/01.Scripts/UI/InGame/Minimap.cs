@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,7 +29,8 @@ public class Minimap : MonoBehaviour
 
         if (GameManager.Instance.SelfPlayer == null) return;
 
-        foreach(string key in _points.Keys )
+        var pointKeys = _points.Keys.ToArray();
+        foreach (string key in pointKeys)
         {
             if (!Player.PlayerMap.ContainsKey(key))
             {
@@ -37,7 +39,8 @@ public class Minimap : MonoBehaviour
             }
         }
 
-        foreach(string uid in Player.PlayerMap.Keys)
+        var playerKeys = Player.PlayerMap.Keys.ToArray();
+        foreach (string uid in playerKeys)
         {
             if(!_points.ContainsKey(uid)) {
                 if(uid == GameManager.Instance.SelfPlayer.ClientInfo.UID)

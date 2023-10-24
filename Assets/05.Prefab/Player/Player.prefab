@@ -179,7 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 9159896612521515348}
-  SkillKeys: 710000006500000063000000
+  SkillKeys: 710000006500000072000000
   _nameTextUI: {fileID: 6226176734310741384}
   _playerRenderer: {fileID: 7176156071005850549}
   _playerSelfSprite: {fileID: 21300000, guid: bdb9cafd6b74a834e9b5af121dac3793, type: 3}

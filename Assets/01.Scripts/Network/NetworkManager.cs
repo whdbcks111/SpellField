@@ -166,6 +166,7 @@ public class NetworkManager : MonoBehaviour
 
     private void OnEvent(string from, string eventName, string message)
     {
+        print($"{from} {eventName} {message}");
         if (from.Equals("server"))
         {
             switch (eventName)

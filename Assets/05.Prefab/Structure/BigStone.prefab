@@ -52,6 +52,7 @@ MonoBehaviour:
   baseHP: 1500
   baseDefend: 100
   baseMagicResistance: 0
+  StructureId: 0
 --- !u!50 &8301147515758270569
 Rigidbody2D:
   serializedVersion: 4
@@ -196,7 +197,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_Sprite: {fileID: 21300000, guid: 0ccef99a1ea3c004d86dc709bd342ec5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

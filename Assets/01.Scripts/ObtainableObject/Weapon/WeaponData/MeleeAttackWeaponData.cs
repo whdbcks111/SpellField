@@ -10,12 +10,11 @@ public class MeleeAttackWeaponData : WeaponData
 
     [SerializeField] private float _swingRotation = 30f;
 
-    private bool _isAttacking = false;
-    private readonly HashSet<Damageable> _attackedObjects = new();
-
     public override void OnMount(Player p, Weapon weapon)
     {
         base.OnMount(p, weapon);
+        weapon.SetData("attackedObjects", new HashSet<Damageable>());
+        weapon.SetData("isAttacking", false);
     }
 
     protected override void OnUpdate(Player p, Weapon weapon)
@@ -26,29 +25,38 @@ public class MeleeAttackWeaponData : WeaponData
     public override void OnWeaponTriggerStay(Collider2D collider, Player self, Weapon weapon)
     {
         base.OnWeaponTriggerStay(collider, self, weapon);
-        if(_isAttacking && collider.TryGetComponent(out Damageable damageable) && damageable != self && 
-            !_attackedObjects.Contains(damageable))
+
+        var attackedObjects = weapon.GetData<HashSet<Damageable>>("attackedObjects");
+        var isAttacking = weapon.GetData<bool>("isAttacking");
+
+        if (isAttacking && collider.TryGetComponent(out Damageable damageable) && damageable != self && 
+            !attackedObjects.Contains(damageable))
         {
-            _attackedObjects.Add(damageable);
+            attackedObjects.Add(damageable);
             damageable.Damage(self.Stat.GetPhysicalAttackParams());
         }
     }
 
-    private async UniTask AttackTask(float time)
+    private async UniTask AttackTask(float time, Weapon weapon)
     {
-        if (_isAttacking) return;
-        _attackedObjects.Clear();
-        _isAttacking = true;
+        var isAttacking = weapon.GetData<bool>("isAttacking");
+        var attackedObjects = weapon.GetData<HashSet<Damageable>>("attackedObjects");
+
+        if (isAttacking) return;
+        attackedObjects.Clear();
+
+        weapon.SetData("isAttacking", true);
         await UniTask.Delay(TimeSpan.FromSeconds(time));
-        _isAttacking = false;
+        weapon.SetData("isAttacking", false);
     }
 
     protected override void OnUse(Player p, Weapon weapon)
     {
         base.OnUse(p, weapon);
+
         var swingTime = Mathf.Clamp(weapon.Data.Cooldown * 0.6f, 0.05f, 0.15f);
         p.Hand.Swing(_swingRotation, swingTime);
 
-        AttackTask(swingTime).Forget();
+        AttackTask(swingTime, weapon).Forget();
     }
 }

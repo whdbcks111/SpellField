@@ -18,7 +18,7 @@ MonoBehaviour:
   Description: "\uC804\uBC29\uC73C\uB85C \uB3C4\uB07C\uB97C \uD718\uB458\uB7EC \uBB3C\uB9AC
     \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
   DisplayObject: {fileID: 182028857364932153, guid: 3c50533c90ff3ef4e8323add00368446, type: 3}
-  Cooldown: 1
+  Cooldown: 0.9
   StatModifiers:
   - _statType: 3
     ModifyType: 0
@@ -26,4 +26,4 @@ MonoBehaviour:
   - _statType: 2
     ModifyType: 0
     Value: 3.43
-  _swingRotation: -85.2
+  _swingRotation: -120

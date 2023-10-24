@@ -77,6 +77,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - weapons
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 29c91a9f98fa0ee40a3409ad326e4f70
+    m_Address: Assets/06.ScriptableObjects/Skills/PlantBomb SkillData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b545a273754a74742940592b152ec63e, type: 2}
   m_SchemaSet:
