@@ -37,7 +37,6 @@ public class RoomConnectUI : MonoBehaviour
                     target = roomInfos[i];
                 }
             }
-            print(target.UID);
             NetworkManager.Instance.JoinRoom(target.UID);
         }
     }

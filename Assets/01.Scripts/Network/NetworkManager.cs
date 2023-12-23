@@ -122,14 +122,21 @@ public class NetworkManager : MonoBehaviour
                 {
                     if(ch == '\0')
                     {
-                        ProcessPacket(_packetBuilder.ToString());
+                        try
+                        {
+                            ProcessPacket(_packetBuilder.ToString());
+                        }
+                        catch(Exception e)
+                        {
+                            Debug.LogError(_packetBuilder.ToString());
+                            Debug.LogError(e);
+                        }
                         _packetBuilder.Clear();
                     }
                     else _packetBuilder.Append(ch);
                 }
             }
         }
-        
     }
 
     private void ProcessPacket(string packet)
@@ -166,7 +173,6 @@ public class NetworkManager : MonoBehaviour
 
     private void OnEvent(string from, string eventName, string message)
     {
-        print($"{from} {eventName} {message}");
         if (from.Equals("server"))
         {
             switch (eventName)

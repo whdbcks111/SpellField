@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b0a635abcc588d44862ba8c4c53a429, type: 3}
+  m_Name: LavaBurn
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 0dceb121b013b134f81c210e2f31f9e3, type: 3}
+  Name: "\uB77C\uBC14 \uBC88"
+  DescriptionSummary: "\uC8FC\uC704\uB85C \uC6A9\uC554 \uBD88\uB625\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  _prefab: {fileID: 3658406521677521654, guid: 07339202a6db0504292ce9c703e353f3, type: 3}
+  _baseDamage: 10
+  _damageMagicForceCoefficient: 0.1
+  _damageGrowth: 5
+  _baseManaCost: 50
+  _manaCostGrowth: 10
+  _baseCooldown: 9
+  _cooldownShrink: 1
+  _minCooldown: 5
+  _baseAngleCount: 25
+  _angleCountGrowth: 6
+  _maxAngleCount: 50
+  _baseFireLevel: 2
+  _fireLevelGrowth: 0.8
+  _fireTime: 5

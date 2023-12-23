@@ -9,6 +9,8 @@ public class PlayerSkill
     public float CurrentCooldown;
     public int Level;
     public float ObtainTime;
+    public float ChargeTime;
+    public bool IsCharging = false;
 
     private readonly Dictionary<string, object> _extraData = new();
 
@@ -17,6 +19,7 @@ public class PlayerSkill
         Data = data;
         CurrentCooldown = 0f;
         Level = level;
+        ObtainTime = Time.time;
     }
 
     public T GetData<T>(string key, T defaultValue)
@@ -39,7 +42,7 @@ public class PlayerSkill
         _extraData[key] = value;
     }
 
-    public void Active(Player p)
+    public void StartCharge(Player p)
     {
         if (p.IsSelf)
         {
@@ -55,14 +58,35 @@ public class PlayerSkill
             }
             p.Mana -= Data.GetManaCost(p, this);
             CurrentCooldown = Data.GetCooldown(p, this);
-            NetworkManager.Instance.SendPacket("others", "active-skill", Data.Name);
+            NetworkManager.Instance.SendPacket("others", "start-charge-skill", Data.Name);
         }
+        IsCharging = true;
+        ChargeTime = 0f;
+        Data.OnStartCharge(p, this);
+    }
+
+    public void Active(Player p)
+    {
+        if (!IsCharging) return;
+        IsCharging = false;
+        if(p.IsSelf)
+        {
+            NetworkManager.Instance.SendPacket("others", "active-skill", Data.Name);
+            CurrentCooldown = Data.GetCooldown(p, this);
+        }
+        
         Data.OnActiveUse(p, this);
     }
 
     public void Update(Player p)
     {
         if(CurrentCooldown > 0f) CurrentCooldown -= Time.deltaTime;
+        if (IsCharging)
+        {
+            ChargeTime += Time.deltaTime;
+            CurrentCooldown = Data.GetCooldown(p, this);
+            Data.OnCharging(p, this);
+        }
         Data.OnPassiveUpdate(p, this);
     }
 }

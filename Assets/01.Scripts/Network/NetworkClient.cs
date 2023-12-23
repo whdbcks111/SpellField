@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEngine.Rendering.DebugUI;
 
 public class NetworkClient : MonoBehaviour, IClient
 {
@@ -39,6 +40,31 @@ public class NetworkClient : MonoBehaviour, IClient
         GameManager.Instance.StartGame();
     }
 
+    private async UniTask SetStructureHP(int id, float value)
+    {
+        Structure structure = null;
+        await UniTask.WaitUntil(() => Structure.StructureMap.TryGetValue(id, out structure));
+        structure.SyncHP(value);
+    }
+
+    private async UniTask SyncStructureDeath(int id)
+    {
+        Structure structure = null;
+        await UniTask.WaitUntil(() => Structure.StructureMap.TryGetValue(id, out structure));
+        structure.OnDeath();
+    }
+
+    private async UniTask SetSkinTask(string from, string message)
+    {
+        Player p = null;
+        await UniTask.WaitUntil(() => Player.PlayerMap.TryGetValue(from, out p));
+        var skinData = await PlayerSkinDatabase.GetSkin(message);
+        if (skinData != null)
+        {
+            p.SetSkin(skinData);
+        }
+    }
+
     public void OnEvent(string from, string eventName, string message)
     {
         switch (eventName)
@@ -55,6 +81,11 @@ public class NetworkClient : MonoBehaviour, IClient
                 break;
             case "start-game":
                 OnStartGame().Forget();
+                break;
+            case "set-skin":
+                {
+                    SetSkinTask(from, message).Forget();
+                }
                 break;
             case "spawn-player":
                 {
@@ -73,6 +104,14 @@ public class NetworkClient : MonoBehaviour, IClient
                         float.TryParse(splitResult[1], out float y))
                     {
                         player.OnMove(new(x, y));
+                    }
+                }
+                break;
+            case "player-death":
+                {
+                    if (Player.PlayerMap.TryGetValue(from, out var player))
+                    {
+                        player.OnDeath();
                     }
                 }
                 break;
@@ -95,10 +134,17 @@ public class NetworkClient : MonoBehaviour, IClient
                 {
                     string[] splitResult = message.Split(':', 2);
                     if (int.TryParse(splitResult[0], out var id) &&
-                        Structure.StructureMap.TryGetValue(id, out var structure) &&
                         float.TryParse(splitResult[1], out var value))
                     {
-                        structure.SyncHP(value);
+                        SetStructureHP(id, value).Forget();
+                    }
+                }
+                break;
+            case "structure-death":
+                {
+                    if (int.TryParse(message, out var id))
+                    {
+                        SyncStructureDeath(id).Forget();
                     }
                 }
                 break;
@@ -108,25 +154,72 @@ public class NetworkClient : MonoBehaviour, IClient
                         player.SyncMana(value);
                 }
                 break;
-            case "show-damage":
-                {
-                    string[] splitResult = message.Split(':', 3);
-                    if (Player.PlayerMap.TryGetValue(from, out var player) &&
-                        float.TryParse(splitResult[0], out float x) &&
-                        float.TryParse(splitResult[1], out float y) &&
-                        float.TryParse(splitResult[2], out float amount))
-                    {
-                        //GameManager.Instance.ShowDamage(new Vector3(x, y), amount);
-                    }
-                }
-                break;
             case "active-skill":
                 {
                     if (Player.PlayerMap.TryGetValue(from, out var player))
                     {
-                        foreach (var skill in player.Skills)
+                        foreach (var skill in player.GetSkills())
                         {
                             if (skill is not null && skill.Data.Name.Equals(message)) skill.Active(player);
+                        }
+                    }
+                }
+                break;
+            case "add-effect":
+                {
+                    string[] splitResult = message.Split(':', 4);
+                    var effType = EffectType.GetByName(splitResult[0]);
+                    if (Player.PlayerMap.TryGetValue(from, out var target) &&
+                        effType != null &&
+                        int.TryParse(splitResult[1], out var level) &&
+                        float.TryParse(splitResult[2], out var duration))
+                    {
+                        Player.PlayerMap.TryGetValue(splitResult[3], out Player caster);
+                        target.AddEffect(new(effType, level, duration, caster), true);
+                    }
+                }
+                break;
+            case "add-shield":
+                {
+                    string[] splitResult = message.Split(':', 2);
+                    if (Player.PlayerMap.TryGetValue(from, out var target) &&
+                        float.TryParse(splitResult[0], out var amount) &&
+                        float.TryParse(splitResult[1], out var time))
+                    {
+                        target.AddShield(amount, time, true);
+                    }
+                }
+                break;
+            case "damage-player":
+                {
+                    string[] splitResult = message.Split(':', 2);
+                    if (Player.PlayerMap.TryGetValue(from, out var target) &&
+                        float.TryParse(splitResult[0], out var amount) &&
+                        Player.PlayerMap.TryGetValue(splitResult[1], out var attacker))
+                    {
+                        target.Damage(amount, attacker, true);
+                    }
+                }
+                break;
+            case "damage-structure":
+                {
+                    string[] splitResult = message.Split(':', 3);
+                    if (int.TryParse(splitResult[0], out var id) &&
+                        Structure.StructureMap.TryGetValue(id, out var structure) &&
+                        float.TryParse(splitResult[1], out var amount) &&
+                        Player.PlayerMap.TryGetValue(splitResult[2], out var attacker))
+                    {
+                        structure.Damage(amount, attacker, true);
+                    }
+                }
+                break;
+            case "start-charge-skill":
+                {
+                    if (Player.PlayerMap.TryGetValue(from, out var player))
+                    {
+                        foreach (var skill in player.GetSkills())
+                        {
+                            if (skill is not null && skill.Data.Name.Equals(message)) skill.StartCharge(player);
                         }
                     }
                 }
@@ -174,13 +267,16 @@ public class NetworkClient : MonoBehaviour, IClient
     private async UniTask ChangeSkill(Player player, int index, string skillName, int level)
     {
         PlayerSkillData data = await PlayerSkillDatabase.GetSkill(skillName);
-        if (data is not null) player.Skills[Mathf.Clamp(index, 0, player.Skills.Length - 1)] = new PlayerSkill(data, level);
+        if (data != null)
+        {
+            player.SetSkill(Mathf.Clamp(index, 0, player.SkillLength - 1), new PlayerSkill(data, level));
+        }
     }
 
     private async UniTask ChangeWeapon(Player player, string weaponName)
     {
         WeaponData data = await WeaponDatabase.GetWeapon(weaponName);
-        if (data is not null) player.MountedWeapon = new Weapon(data);
+        if (data != null) player.MountedWeapon = new Weapon(data);
     }
 
     private async UniTask SpawnPlayer(string uid, Vector3 pos)

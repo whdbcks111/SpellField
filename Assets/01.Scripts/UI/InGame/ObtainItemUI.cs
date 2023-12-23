@@ -8,7 +8,8 @@ using UnityEngine.UI;
 
 public class ObtainItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image IconImage;
+    public Image IconImage, OutlinedIconImage;
+    public GameObject OutlinedIconObject;
     public Image Outline;
     public TextMeshProUGUI ObtainTypeText;
     public TextMeshProUGUI DescriptionText;

@@ -39,7 +39,7 @@ public class HealSkillData : PlayerSkillData
     public override string GetDescription(Player p, PlayerSkill skill)
     {
         return $"체력을 {StringUtil.HealValue(GetHealAmount(p, skill))}만큼 회복합니다.\n" +
-            $"회복 후 3초 동안 {StatType.MoveSpeed.DisplayName}(이)가 증가합니다.";
+            $"회복 후 {_speedUpTime:0.0}초 동안 {StatType.MoveSpeed.DisplayName}(이)가 증가합니다.";
     }
 
     public override void OnPassiveUpdate(Player p, PlayerSkill skill)
@@ -57,7 +57,7 @@ public class HealSkillData : PlayerSkillData
     {
         skill.SetData("speedUpTimer", _speedUpTime);
         p.HP += GetHealAmount(p, skill);
-        var particle = Instantiate(_healParticle, p.PlayerRenderer.transform.position, Quaternion.identity);
+        ParticleManager.SpawnParticle(_healParticle, p.PlayerRenderer.transform);
     }
 
     public override float GetManaCost(Player p, PlayerSkill skill)

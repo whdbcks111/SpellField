@@ -83,6 +83,204 @@ MonoBehaviour:
     m_SerializedLabels:
     - skills
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5b7b291cc61ec5a4a9513e65d2842a5b
+    m_Address: Assets/06.ScriptableObjects/Skills/PhotonCannon SkillData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef0b87d41d1ecb345b672ef3677be0ae
+    m_Address: Assets/06.ScriptableObjects/Skills/IceStrike SkillData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a550c31104ce75c46afc7bb04d27c2a6
+    m_Address: Assets/06.ScriptableObjects/Skills/Blink SkillData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4300bb613cdf7a04bbc3044a7c22f715
+    m_Address: Assets/06.ScriptableObjects/Skills/ReboundRing SkillData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 05c9811e1abf17c449a7b730577c32b1
+    m_Address: Assets/06.ScriptableObjects/Weapons/FlameDagger.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dfb5c0cc2efa73943ad16654ea0a53e2
+    m_Address: Assets/06.ScriptableObjects/Skills/SpellBlade.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7053dd6018229d34a9945164de524fae
+    m_Address: Assets/06.ScriptableObjects/Weapons/NeonSpear.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e8174cbb477620c46b97119cb2bd9aac
+    m_Address: Assets/06.ScriptableObjects/Weapons/Hyper Sword.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2affb30b3454b5b4f885fcb5d4906029
+    m_Address: Assets/06.ScriptableObjects/Skills/Stealth.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80fbd08906800cb4bb03085f719d4b04
+    m_Address: Assets/06.ScriptableObjects/Skills/LavaBurn.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c05af3174f9bcc4f98c1573469fafe0
+    m_Address: Assets/06.ScriptableObjects/Skills/Protector.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba311cf17b4d1774bb695036243ca27b
+    m_Address: Assets/06.ScriptableObjects/Skins/FriedEgg.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 51c6851f7db32af4d9166b20b043eb9a
+    m_Address: Assets/06.ScriptableObjects/Skins/Dog.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 704ad823cce096e46adaa2c3346a3733
+    m_Address: Assets/06.ScriptableObjects/Skins/Default.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b5059ee3099fec64c953194bda1c0700
+    m_Address: Assets/06.ScriptableObjects/Skins/Sun.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b0683d2547532bd40831e56e9e36510d
+    m_Address: Assets/06.ScriptableObjects/Skins/Korea.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 925d2f46de5233245a5412dbf1350278
+    m_Address: Assets/06.ScriptableObjects/Skins/Hwabe.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c17d067302290304b9a2bd279909093a
+    m_Address: Assets/06.ScriptableObjects/Skins/Pig.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 34bd04b0dd5798e4c80786d1e988554d
+    m_Address: Assets/06.ScriptableObjects/Skins/RibbonSlime.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e0520da922a2df479b67530933ae097
+    m_Address: Assets/06.ScriptableObjects/Skins/GreenPeng.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 81644f6f2aafd0d48abf89dc305065a0
+    m_Address: Assets/06.ScriptableObjects/Skins/Grape.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 522757e280ffb69419b165a2fcfc47db
+    m_Address: Assets/06.ScriptableObjects/Skins/WhiteCat.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec981d77dfcb4fd439d9ec012052e7e6
+    m_Address: Assets/06.ScriptableObjects/Skins/Pigeon.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 006bd86de883f5245b300df8aa04b755
+    m_Address: Assets/06.ScriptableObjects/Skins/Earth.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: afe2435abe715c946a00f3d2db09a3c4
+    m_Address: Assets/06.ScriptableObjects/Skins/Pudding.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1497d2c5912796346a03b1845bf0afce
+    m_Address: Assets/06.ScriptableObjects/Skins/BerryShavedIce.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0ddd48365f94f814d9670a1214b9c96d
+    m_Address: Assets/06.ScriptableObjects/Skins/PurpleCat.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 01bf2d02aeaa68b478b5f5da6e869fad
+    m_Address: Assets/06.ScriptableObjects/Skills/Revolution.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc4d351f1a2543342aa3a480e8ad224f
+    m_Address: Assets/06.ScriptableObjects/Skins/Watermelon.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f74ceca7e2ed8044ab96eb342b4ba3e
+    m_Address: Assets/06.ScriptableObjects/Weapons/Hoshi Mace.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d2672c682e595e4418a138defa6fcbad
+    m_Address: Assets/06.ScriptableObjects/Skins/Rabbit.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb609b93d9c19eb4a9a988a57ce0d611
+    m_Address: Assets/06.ScriptableObjects/Skins/Fox.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c7655c76f445ca41a18059c6587b2d1
+    m_Address: Assets/06.ScriptableObjects/Skills/Tornado.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b545a273754a74742940592b152ec63e, type: 2}
   m_SchemaSet:

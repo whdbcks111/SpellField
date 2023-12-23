@@ -9,6 +9,7 @@ using UnityEngine;
 public class FireballSkillData : PlayerSkillData
 {
     [SerializeField] private DamageProjectile _prefab;
+    [SerializeField] private AudioClip _fireSound;
 
     [Header("Damage")]
     [SerializeField] private float _baseDamage;
@@ -29,6 +30,10 @@ public class FireballSkillData : PlayerSkillData
     [SerializeField] private float _angleCountGrowth;
     [SerializeField] private int _maxAngleCount;
     [SerializeField] private float _angleSpan;
+
+    [Header("Effect")]
+    [SerializeField] private int _fireEffectLevel;
+    [SerializeField] private float _fireEffectTime;
 
     public override float GetCooldown(Player p, PlayerSkill skill)
     {
@@ -62,11 +67,16 @@ public class FireballSkillData : PlayerSkillData
     {
         var projectile = Instantiate(_prefab);
         projectile.AttackParams = GetProjectileParams(p, skill);
+        projectile.RegisterCollisionEvent(damageable =>
+        {
+            if (damageable is Player player) player.AddEffect(new(EffectType.Fire, _fireEffectLevel, _fireEffectTime, p));
+        });
         return projectile;
     }
 
     public override void OnActiveUse(Player p, PlayerSkill skill)
     {
+        SoundManager.Instance.PlaySFX(_fireSound, p.transform.position, 1f, 1f);
         Projectile.Shoot(() => GetProjectile(p, skill), p, 
             p.PlayerRenderer.transform.position, 
             p.PlayerRenderer.transform.eulerAngles.z,

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1692e8ae82aabd24293dd7d95506707d, type: 3}
+  m_Name: Blink SkillData
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 843768fd50078904d9a13a8d1df3f555, type: 3}
+  Name: "\uBE14\uB9C1\uD06C"
+  DescriptionSummary: "\uC804\uBC29\uC73C\uB85C \uC21C\uAC04\uC774\uB3D9 \uD55C\uB2E4."
+  _blinkParticle: {fileID: 522932239490844756, guid: e0923587b93e5f049893a024323fa7b3, type: 3}
+  _blinkTrail: {fileID: 6731811499865633543, guid: 442deb8d010e5a14088e0b2b2a6c83d4, type: 3}
+  _baseMoveLength: 7
+  _lengthGrowth: 2
+  _maxMoveLength: 30
+  _moveSpeedDownPercentage: 90
+  _speedDownTime: 0.5
+  _baseManaCost: 50
+  _manaCostGrowth: 10
+  _baseCooldown: 10
+  _cooldownShrink: 2
+  _minCooldown: 3

@@ -204,7 +204,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0.0044407165, y: 0.026866369}
   serializedVersion: 2
-  m_Radius: 2.0000975
+  m_Radius: 2
 --- !u!114 &1318953246379601323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,10 +221,19 @@ MonoBehaviour:
   Speed: 0
   Accelerate: 0
   PenetrateCount: 0
-  LiveTime: 100
+  LiveTime: 150
+  AllowNegativeSpeed: 0
+  OnlyTriggerWithPlayer: 1
   MaxLiveTime: 0
-  _bombParticle: {fileID: 522932239490844756, guid: ebd62cad6b49063488aeb4d20cea184c, type: 3}
+  IsTriggerable: 1
+  _waitTime: 1
+  _waitColor: {r: 0, g: 1, b: 0.6812067, a: 1}
+  _detectColor: {r: 1, g: 0.19345713, b: 0, a: 1}
+  _bombRenderer: {fileID: 4142329497306743348}
+  _explodeParticle: {fileID: 522932239490844756, guid: ebd62cad6b49063488aeb4d20cea184c, type: 3}
+  _smokeParticle: {fileID: 522932239490844756, guid: dcc219889a6b23b47b5c9eabcf20083a, type: 3}
   _light: {fileID: 6292499669374141948}
+  _collisionArea: {fileID: 6194335965827673300}
 --- !u!1 &3371886938552278298
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +308,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -2
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.30588236}
+  m_Color: {r: 1, g: 0, b: 0, a: 0.15686275}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

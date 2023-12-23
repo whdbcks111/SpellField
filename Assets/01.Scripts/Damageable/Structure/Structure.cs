@@ -31,7 +31,6 @@ public class Structure : Damageable
 
     public static void SpawnStructure(Structure prefab, Vector2 pos)
     {
-        print(prefab);
         Instantiate(prefab, pos, Quaternion.identity);
     }
 
@@ -47,7 +46,7 @@ public class Structure : Damageable
 
     private void OnDestroy()
     {
-        StructureMap[StructureId] = null;
+        StructureMap.Remove(StructureId);
     }
 
     private void SyncHP()
@@ -71,20 +70,40 @@ public class Structure : Damageable
                 if (!Mathf.Approximately(_beforeHp, HP))
                     SyncHP();
             }
+
+            if (HP <= 0)
+            {
+                NetworkManager.Instance.SendPacket("others", "structure-death", $"{StructureId}");
+                OnDeath();
+            }
         }
-
-        if (HP <= 0) Destroy(gameObject);
     }
 
-    public override void Damage(AttackParams attackParams, bool showDamage = true)
+    public void OnDeath()
     {
-        if (!NetworkManager.Instance.PingData.IsMasterClient) return;
-        base.Damage(attackParams, showDamage);
+        Destroy(gameObject);
     }
 
-    public override void Damage(float amount)
+    public override void Damage(AttackParams attackParams, Player attacker = null, bool showDamage = true)
     {
-        if (!NetworkManager.Instance.PingData.IsMasterClient) return;
-        base.Damage(amount);
+        base.Damage(attackParams, attacker, showDamage && NetworkManager.Instance.PingData.IsMasterClient);
+    }
+
+    public override void Damage(float amount, Player attacker = null)
+    {
+        Damage(amount, attacker, true);
+    }
+
+    public void Damage(float amount, Player attacker = null, bool sync = false)
+    {
+        if (!sync)
+        {
+            if (NetworkManager.Instance.PingData.IsMasterClient)
+            {
+                NetworkManager.Instance.SendPacket("others", "damage-structure", $"{StructureId}:{amount:0.0}:{(attacker == null ? null : attacker.ClientInfo.UID)}");
+            }
+            else return;
+        }
+        base.Damage(amount, attacker);
     }
 }

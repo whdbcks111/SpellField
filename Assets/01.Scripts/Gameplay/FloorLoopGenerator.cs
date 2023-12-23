@@ -6,12 +6,13 @@ using UnityEngine;
 public class FloorLoopGenerator : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _loopPrefab;
+    [SerializeField] private Sprite[] _loopSprites;
 
     private Vector3 _loopSize;
 
     private Vector2 _leftBottom, _rightTop;
-    private Dictionary<Vector2Int, SpriteRenderer> _loopObjectMap = new();
-    private Queue<SpriteRenderer> _unusedObjects = new();
+    private readonly Dictionary<Vector2Int, SpriteRenderer> _loopObjectMap = new();
+    private readonly Queue<SpriteRenderer> _unusedObjects = new();
 
     private void Awake()
     {
@@ -24,12 +25,23 @@ public class FloorLoopGenerator : MonoBehaviour
         CheckFloor();
     }
 
+    private int GetLoopIndex(Vector2Int pos)
+    {
+        const float step = 2.3f;
+        var perlin = Mathf.PerlinNoise(pos.x * step, pos.y * step);
+
+        return Mathf.Clamp((int)(perlin * _loopSprites.Length), 0, _loopSprites.Length - 1);
+    }
+
     private void PlaceLoopObject(Vector2Int pos)
     {
         if (_loopObjectMap.ContainsKey(pos)) return;
         SpriteRenderer target;
         if (_unusedObjects.Count > 0) target = _unusedObjects.Dequeue();
         else target = Instantiate(_loopPrefab, transform);
+
+        target.sprite = _loopSprites[GetLoopIndex(pos)];
+        // 반복감을 없애기 위해 특정한 계산식으로 땅의 스프라이트를 정함
 
         target.gameObject.SetActive(true);
         target.transform.position = new(pos.x * _loopSize.x, pos.y * _loopSize.y);

@@ -7,6 +7,7 @@ public class Weapon
 {
     public WeaponData Data;
     public float CurrentCooldown;
+    public WeaponDisplay Display;
 
     private readonly Dictionary<string, object> _extraData = new();
 
@@ -38,8 +39,8 @@ public class Weapon
 
     public void OnMount(Player p)
     {
-        WeaponDisplay display = UnityEngine.Object.Instantiate(Data.DisplayObject, p.Hand.transform);
-        display.OnTriggerStay2DEvent = collider2d => Data.OnWeaponTriggerStay(collider2d, p, this);
+        Display = UnityEngine.Object.Instantiate(Data.DisplayObject, p.Hand.transform);
+        Display.OnTriggerStay2DEvent = collider2d => Data.OnWeaponTriggerStay(collider2d, p, this);
         Data.OnMount(p, this);
     }
 

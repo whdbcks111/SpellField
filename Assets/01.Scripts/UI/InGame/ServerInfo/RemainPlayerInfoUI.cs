@@ -15,7 +15,7 @@ public class RemainPlayerInfoUI : MonoBehaviour
 
     private void Update()
     {
-        if (NetworkManager.Instance is null || !NetworkManager.Instance.IsPingDataSetted) return;
-        _text.SetText(NetworkManager.Instance.PingData.Clients.Length + "명 생존");
+        if (NetworkManager.Instance == null || !NetworkManager.Instance.IsPingDataSetted) return;
+        _text.SetText(GameManager.Instance.RemainPlayerCount + "명 생존");
     }
 }

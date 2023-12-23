@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class PlayerHand : MonoBehaviour
 {
+    public SpriteRenderer Renderer;
+
     private bool _isSwinging = false;
     private float _swingTime = 0.5f;
     private float _rotateTarget = 0f;
@@ -34,7 +36,7 @@ public class PlayerHand : MonoBehaviour
     public void Swing(float rot, float time)
     {
         if (_isSwinging) return;
-        _resetTimer = 1f;
+        _resetTimer = 2f;
         _isSwinging = true;
         SwingTask(rot, time).Forget();
     }

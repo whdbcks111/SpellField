@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 8d5cab606376f334a8509e81d9822eaf
   m_currentHash:
     serializedVersion: 2
-    Hash: d4171e67dc1b2a13523c9df8ed909a65
+    Hash: 587a701253694e123eec78997e41cb84
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -90,6 +90,7 @@ MonoBehaviour:
     - default
     - skills
     - weapons
+    - skins
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: bb8ba6b2ae8b1f4458571d8155b86477, type: 2}

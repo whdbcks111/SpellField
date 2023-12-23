@@ -17,8 +17,9 @@ MonoBehaviour:
   DescriptionSummary: "\uC804\uBC29\uC73C\uB85C \uD654\uC5FC\uAD6C\uB97C \uBC29\uC0AC\uD615\uC73C\uB85C
     \uB2E4\uC218 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
   _prefab: {fileID: 3658406521677521654, guid: 0403b5c2b0d7a754c9214a953686f76d, type: 3}
+  _fireSound: {fileID: 8300000, guid: bc9e9a453d1f8624c9bda7cab3274604, type: 3}
   _baseDamage: 60
-  _damageMagicForceCoefficient: 0.4
+  _damageMagicForceCoefficient: 0.6
   _damageGrowth: 20
   _baseManaCost: 50
   _manaCostGrowth: 4
@@ -27,5 +28,7 @@ MonoBehaviour:
   _minCooldown: 4
   _baseAngleCount: 3
   _angleCountGrowth: 1.6
-  _maxAngleCount: 6
+  _maxAngleCount: 10
   _angleSpan: 10
+  _fireEffectLevel: 2
+  _fireEffectTime: 1

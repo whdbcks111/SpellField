@@ -7,16 +7,16 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class Minimap : MonoBehaviour
 {
-    private Image _image;
-    [SerializeField] private RectTransform _selfPointPrefab, _otherPointPrefab;
+    private Image _minimapImage;
+    [SerializeField] private Image _selfPointPrefab, _otherPointPrefab;
 
     private float _width;
-    public readonly Dictionary<string, RectTransform> _points = new();
+    public readonly Dictionary<string, Image> _points = new();
 
     private void Awake()
     {
-        _image = GetComponent<Image>();
-        _width = _image.rectTransform.sizeDelta.x;
+        _minimapImage = GetComponent<Image>();
+        _width = _minimapImage.rectTransform.sizeDelta.x;
     }
 
     private Vector2 ConvertToAnchoredPos(Vector2 pos)
@@ -39,22 +39,46 @@ public class Minimap : MonoBehaviour
             }
         }
 
-        var playerKeys = Player.PlayerMap.Keys.ToArray();
-        foreach (string uid in playerKeys)
+        foreach (string uid in Player.PlayerMap.Keys)
         {
-            if(!_points.ContainsKey(uid)) {
-                if(uid == GameManager.Instance.SelfPlayer.ClientInfo.UID)
-                    _points[uid] = Instantiate(_selfPointPrefab, _image.transform);
+            var player = Player.PlayerMap[uid];
+            if (!_points.ContainsKey(uid)) {
+                if(player == GameManager.Instance.SelfPlayer)
+                    _points[uid] = Instantiate(_selfPointPrefab, _minimapImage.transform);
                 else
-                    _points[uid] = Instantiate(_otherPointPrefab, _image.transform);
+                    _points[uid] = Instantiate(_otherPointPrefab, _minimapImage.transform);
             }
+
+            var point = _points[uid];
+
+            var color = point.color;
+            if (player != GameManager.Instance.SelfPlayer)
+            {
+                if (player.Mode == GameMode.Spectator)
+                {
+                    color.a = 0.2f;
+                }
+                else if (player.IsInState(PlayerState.Invisible))
+                {
+                    color.a = 0f;
+                }
+                else
+                {
+                    color.a = 1f;
+                }
+            }
+            else 
+            {
+                color.a = 1f;
+            }
+            point.color = color;
         }
 
         foreach(var entry in _points)
         {
             var uid = entry.Key;
             var point = entry.Value;
-            point.anchoredPosition = ConvertToAnchoredPos(Player.PlayerMap[uid].transform.position);
+            point.rectTransform.anchoredPosition = ConvertToAnchoredPos(Player.PlayerMap[uid].transform.position);
         }
     }
 }

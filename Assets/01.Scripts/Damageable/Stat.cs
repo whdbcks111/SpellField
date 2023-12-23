@@ -11,9 +11,12 @@ public class Stat
         multiplyValues = new(), 
         currentValues = new();
 
+    private readonly List<StatType> _statTypes;
+
     public Stat()
     {
-        foreach (var statType in StatType.GetAll())
+        _statTypes = StatType.GetAll();
+        foreach (var statType in _statTypes)
         {
             baseValues[statType] = statType.DefaultValue;
             currentValues[statType] = baseValues[statType];
@@ -23,7 +26,7 @@ public class Stat
 
     private void InitStat()
     {
-        foreach (var statType in StatType.GetAll())
+        foreach (var statType in _statTypes)
         {
             addValues[statType] = 0f;
             multiplyValues[statType] = 1f;
@@ -32,7 +35,7 @@ public class Stat
 
     public void LateUpdate()
     {
-        foreach (var statType in StatType.GetAll())
+        foreach (var statType in _statTypes)
         {
             currentValues[statType] = (baseValues[statType] + addValues[statType]) * multiplyValues[statType];
             addValues[statType] = 0f;
@@ -125,6 +128,11 @@ public class Stat
         baseValues[statType] = value;
     }
 
+    public float GetBase(StatType statType)
+    {
+        return baseValues[statType];
+    }
+
     public float Get(StatType statType)
     {
         return Mathf.Clamp(currentValues[statType], statType.MinValue, statType.MaxValue);
@@ -173,11 +181,11 @@ public class StatType : Enumeration<StatType>
 
     public static readonly StatType Attack = new(WrapperType.Attack, nameof(Attack), "물리 공격력",
         stat => "일반적으로 물리 피해를 가할 때의 공격력입니다.",
-        "", "%", 30f, 1f, float.MaxValue, "<sprite=\"StatIcons\" name=\"Attack\">");
+        "", "%", 30f, 0f, float.MaxValue, "<sprite=\"StatIcons\" name=\"Attack\">");
 
     public static readonly StatType MagicForce = new(WrapperType.MagicForce, nameof(MagicForce), "마법력",
         stat => "일반적으로 마법 공격에 사용되는 능력치입니다.",
-        "", "%", 0f, 1f, float.MaxValue, "<sprite=\"StatIcons\" name=\"MagicForce\">");
+        "", "%", 0f, 0f, float.MaxValue, "<sprite=\"StatIcons\" name=\"MagicForce\">");
 
     public static readonly StatType DefendPenetrate = new(WrapperType.DefendPenetrate, nameof(DefendPenetrate), "방어력 관통력",
         stat => $"물리 공격 시 대상의 {Defend.DisplayName}을(를) <color=white>{stat.Get(DefendPenetrate):0.}%</color>만큼 무시합니다.",

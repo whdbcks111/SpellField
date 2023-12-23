@@ -1,7 +1,9 @@
 using Cinemachine;
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -19,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     public const float DefaultGameTime = 8 * 60;
     public const float DefaultMapRadius = 200f;
-    public const float MinAreaRadius = 10f;
+    public const float MinAreaRadius = 1f;
     public const float DefaultObtainSpan = 40f;
 
     public static GameManager Instance { get; private set; }
@@ -27,26 +29,57 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Player SelfPlayer = null;
     [HideInInspector] public int Seed;
 
+    [SerializeField] private AudioClip _bgmSound;
     [SerializeField] private TextMeshProUGUI _bounceTextPrefab;
     [SerializeField] private CinemachineVirtualCamera _virtualCam;
     [SerializeField] private SafeAreaControl _safeArea;
     [SerializeField] public StructureGenerator _structureGenerator;
     [SerializeField] private UIManager _uiManager;
+    [SerializeField] private GameObject _survivalUI;
 
     private float _remainGameTime = 0f, _maxGameTime = 1f, _mapRadius = 0f;
+
     public float MapRadius { get => _mapRadius; }
     private float _startTime = 0f;
     private float _obtainTime = 0f, _obtainSpan = 0f;
+    public float RemainObtainTime { get => _remainGameTime - _obtainTime; }
+    public float ObtainSpan { get => _obtainSpan; }
 
     private bool _isPlayerSpawned = false;
+    private bool _isFinished = false;
 
     private readonly CancellationTokenSource _destroyCancelToken = new();
     private readonly Dictionary<string, System.Random> _seedRandomMap = new();
+
+    public int ObtainableCount = 0;
 
     public StructureGenerator StructureGenerator { get => _structureGenerator; }
     public UIManager UIManager { get => _uiManager; }
     public SafeAreaControl SafeArea { get => _safeArea; }
     public float RemainGameTime { get => _remainGameTime; }
+    public int RemainPlayerCount { 
+        get
+        {
+            int survivalCount = 0;
+            foreach (var p in Player.GetPlayers())
+            {
+                if (p.Mode == GameMode.Survival) survivalCount++;
+            }
+            return survivalCount;
+        } 
+    }
+
+    public Player AnyRemainPlayer
+    {
+        get
+        {
+            foreach (var p in Player.GetPlayers())
+            {
+                if (p.Mode == GameMode.Survival) return p;
+            }
+            return null;
+        }
+    }
 
     private void Awake()
     {
@@ -71,6 +104,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        ObtainableCount = 0;
         _startTime = Time.realtimeSinceStartup;
 
         var roomState = NetworkManager.Instance.PingData.RoomState;
@@ -104,8 +138,8 @@ public class GameManager : MonoBehaviour
         {
             foreach (ClientInfo client in NetworkManager.Instance.PingData.Clients)
             {
-                float angle = Random.Range(0, 2 * Mathf.PI);
-                Vector2 pos = Random.Range(0, _mapRadius) * new Vector2(
+                float angle = UnityEngine.Random.Range(0, 2 * Mathf.PI);
+                Vector2 pos = UnityEngine.Random.Range(0, _mapRadius) * new Vector2(
                     Mathf.Cos(angle),
                     Mathf.Sin(angle)
                     );
@@ -114,6 +148,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        SoundManager.Instance.PlayBGM(_bgmSound);
     }
 
     private void GenerateStructures()
@@ -125,7 +160,7 @@ public class GameManager : MonoBehaviour
     {
         _remainGameTime = Mathf.Max(0, _maxGameTime - (Time.realtimeSinceStartup - _startTime));
 
-        if(SelfPlayer is not null)
+        if(SelfPlayer != null)
         {
             if(!_isPlayerSpawned)
             {
@@ -144,19 +179,43 @@ public class GameManager : MonoBehaviour
             {
                 p.AddShield(p.MaxHP, 10f);
             }
+            ObtainableCount++;
+        }
+
+        if(ObtainableCount > 0 && !UIManager.ObtainPanel.IsOpened)
+        {
+            ObtainableCount--;
             ShowObtainPanel();
         }
 
-        if (NetworkManager.Instance.PingData.IsMasterClient &&
-            !NetworkManager.Instance.PingData.RoomState.ContainsKey("is_single") &&
-            NetworkManager.Instance.PingData.RoomState.ContainsKey("is_started") &&
-            NetworkManager.Instance.PingData.Clients.Length == 1)
+        if (!NetworkManager.Instance.PingData.RoomState.ContainsKey("is_single") &&
+            SceneManager.GetActiveScene().name == "GameScene" && 
+            Player.GetPlayers().Length >= NetworkManager.Instance.PingData.Clients.Length &&
+            RemainPlayerCount <= 1 &&
+            !_isFinished)
         {
+            _isFinished = true;
             NetworkManager.Instance.RemoveRoomState("is_started");
-            SceneManager.LoadSceneAsync("RoomScene");
+            GameFinishTask(AnyRemainPlayer).Forget();
         }
 
-        if (AllowSingleplay && Input.GetKeyDown(KeyCode.O)) ShowObtainPanel();
+        if (AllowSingleplay && Input.GetKeyDown(KeyCode.O))
+        {
+            ShowObtainPanel();
+        }
+
+        if(SelfPlayer != null)
+        {
+            _survivalUI.SetActive(SelfPlayer.Mode == GameMode.Survival);
+        }
+    }
+
+    private async UniTask GameFinishTask(Player remainPlayer)
+    {
+        UIManager.WinnerUI.Show(remainPlayer.ClientInfo.Nickname);
+        remainPlayer.AddShield(remainPlayer.MaxHP * 10, 10f, true);
+        await UniTask.Delay(TimeSpan.FromSeconds(4f));
+        await SceneManager.LoadSceneAsync("RoomScene");
     }
 
     public void ShowObtainPanel()

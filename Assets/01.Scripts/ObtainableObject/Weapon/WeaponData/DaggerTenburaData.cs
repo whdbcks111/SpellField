@@ -35,7 +35,7 @@ public class DaggerTenburaData : WeaponData
 
         var dagger = Instantiate(_projectilePrefab, p.PlayerRenderer.transform.position, Quaternion.identity);
         dagger.AttackParams = p.Stat.GetPhysicalAttackParams(p.Stat.Get(StatType.Attack) * _attackCoefficient + _baseDamage);
-        dagger.transform.eulerAngles = p.PlayerRenderer.transform.eulerAngles;
+        dagger.Direction = p.PlayerRenderer.transform.right;
         dagger.Owner = p;
 
         if (list.Count < _maxProjectileCount)

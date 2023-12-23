@@ -6,6 +6,9 @@ public class TreasureBox : Structure
 {
     private void OnDestroy()
     {
-        
+        if (LastAttacker != null && LastAttacker.IsSelf)
+        {
+            GameManager.Instance.ObtainableCount++;
+        }
     }
 }

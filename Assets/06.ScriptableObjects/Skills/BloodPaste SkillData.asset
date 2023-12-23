@@ -19,13 +19,13 @@ MonoBehaviour:
   _prefab: {fileID: 3658406521677521654, guid: 7ee6ce95cf494ca4d8bfaa53d020c9df, type: 3}
   _baseDamage: 30
   _damageMagicForceCoefficient: 0.4
-  _damageGrowth: 5
-  _hpAbsorb: 10
+  _damageGrowth: 10
+  _hpAbsorb: 12
   _baseManaCost: 50
   _manaCostGrowth: 2
   _baseCooldown: 5
   _cooldownShrink: 0.4
   _minCooldown: 3
   _baseAngleCount: 7
-  _angleCountGrowth: 2
+  _angleCountGrowth: 3
   _maxAngleCount: 20

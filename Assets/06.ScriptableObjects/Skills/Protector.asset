@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f8e0a2f84cfad841ad6042a918b65b5, type: 3}
+  m_Name: Protector
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: f736ccbcc65b43047a2199a3693f4da6, type: 3}
+  Name: "\uD504\uB85C\uD14D\uD130"
+  DescriptionSummary: "\uC8FC\uC704\uC758 \uD22C\uC0AC\uCCB4\uB97C \uC5ED\uAC00\uC18D\uC2DC\uD0B5\uB2C8\uB2E4."
+  _shieldRenderer: {fileID: 1618031594816277411, guid: a81d77ec070a8a1439dbf25bbe33cea3, type: 3}
+  _baseShieldSize: 5
+  _shieldSizeGrowth: 1
+  _shieldShrinkSpeed: 1
+  _shieldShrinkSpeedShrink: 0.1
+  _minShieldShrinkSpeed: 0.5
+  _baseManaCost: 50
+  _manaCostGrowth: 5
+  _baseCooldown: 10
+  _cooldownShrink: 1
+  _minCooldown: 5

@@ -13,7 +13,7 @@ public class PlayerSkillUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         var player = GameManager.Instance.SelfPlayer;
         if (GameManager.Instance == null || player == null) return;
-        var skill = player.Skills[_index];
+        var skill = player.GetSkills()[_index];
         if(skill == null) return;
         GameManager.Instance.UIManager.SkillHoverUI.Show(
             $"[Lv.<color=yellow>{skill.Level:0}</color>] {skill.Data.Name}", 
@@ -31,7 +31,7 @@ public class PlayerSkillUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void Update()
     {
         if (GameManager.Instance == null || GameManager.Instance.SelfPlayer == null) return;
-        var skill = GameManager.Instance.SelfPlayer.Skills[_index];
+        var skill = GameManager.Instance.SelfPlayer.GetSkills()[_index];
 
         if(skill != null)
         {

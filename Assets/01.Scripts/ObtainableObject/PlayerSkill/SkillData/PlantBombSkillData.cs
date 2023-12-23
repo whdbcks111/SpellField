@@ -32,7 +32,7 @@ public class PlantBombSkillData : PlayerSkillData
     public AttackParams GetProjectileParams(Player p, PlayerSkill skill)
     {
         return p.Stat.GetMagicalAttackParams(_baseDamage + (skill.Level - 1) * _damageGrowth +
-            p.Stat.Get(StatType.MagicForce) * _damageAttackCoefficient);
+            p.Stat.Get(StatType.Attack) * _damageAttackCoefficient);
     }
 
     public Projectile GetProjectile(Player p, PlayerSkill skill)

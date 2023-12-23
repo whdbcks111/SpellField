@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a77c57f9a69233448ebed6d538ddb70, type: 3}
+  m_Name: Grape
+  m_EditorClassIdentifier: 
+  Name: "\uD3EC\uB3C4"
+  PlayerSprite: {fileID: 399429139, guid: d673f6cc70d5e4e42bcfb6f82b661371, type: 3}
+  HandSprite: {fileID: 771716584, guid: d673f6cc70d5e4e42bcfb6f82b661371, type: 3}

@@ -14,7 +14,7 @@ public class DamageProjectile : Projectile
 
     protected override void OnCollision(Damageable damageable)
     {
-        damageable.Damage(AttackParams);
+        damageable.Damage(AttackParams, Owner);
         OnCollisionEvent?.Invoke(damageable);
     }
 }

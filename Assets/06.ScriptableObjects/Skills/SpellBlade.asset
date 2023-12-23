@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cef3e980727a5446b3675c5052c0c5d, type: 3}
+  m_Name: SpellBlade
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 8bb60d061820f1641b95bcb4b80e1722, type: 3}
+  Name: "\uC2A4\uD3A0 \uBE14\uB808\uC774\uB4DC"
+  DescriptionSummary: "\uB9C8\uBC95\uC758 \uAC80\uC744 \uC18C\uD658\uD574 \uC6D0\uD615\uC73C\uB85C
+    \uD718\uB450\uB974\uACE0 \uAE30\uC808\uC2DC\uD0B5\uB2C8\uB2E4."
+  _prefab: {fileID: 6685530130148985836, guid: 2ebd824f83255134d8dbcbce99c04caa, type: 3}
+  _bladeDistance: 3
+  _baseDamage: 70
+  _damageAttackCoefficient: 0.4
+  _damageGrowth: 10
+  _baseManaCost: 40
+  _manaCostGrowth: 4
+  _baseCooldown: 5
+  _cooldownShrink: 1
+  _minCooldown: 1.5
+  _stunTime: 0.5
+  _stackDuration: 20
+  _moveSpeedAddition: 0.8

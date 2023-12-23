@@ -1,11 +1,16 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ObtainPanelUI : MonoBehaviour
 {
     public ObtainItemUI[] obtainItems;
+
+    public bool IsOpened { get => gameObject.activeSelf || _isOpening; }
+
+    private bool _isOpening = false;
 
     public void Close()
     {
@@ -14,21 +19,43 @@ public class ObtainPanelUI : MonoBehaviour
 
     public void Open()
     {
+        if(_isOpening) return;
+        _isOpening = true;
         OpenTask().Forget();
     }
 
     public async UniTask OpenTask()
     {
-        await UniTask.WaitUntil(() => GameManager.Instance is not null && GameManager.Instance.SelfPlayer is not null);
+        await UniTask.WaitUntil(() => GameManager.Instance != null && GameManager.Instance.SelfPlayer != null);
+
+        var alreadyOwnedSkills = new HashSet<PlayerSkillData>();
+
+        foreach(var skill in GameManager.Instance.SelfPlayer.GetSkills())
+        {
+            if (skill == null) continue;
+            alreadyOwnedSkills.Add(skill.Data);
+        }
 
         var skills = await PlayerSkillDatabase.GetAllData();
         var weapons = await WeaponDatabase.GetAllData();
         List<ObtainableObject> obtainables = new();
 
-        foreach (var skill in skills) obtainables.Add(skill);
-        foreach (var weapon in weapons) obtainables.Add(weapon);
+        foreach (var skillData in skills)
+        {
+            if(alreadyOwnedSkills.Contains(skillData)) continue;
+            obtainables.Add(skillData);
+        }
+        foreach (var weaponData in weapons)
+        {
+            if (weaponData == GameManager.Instance.SelfPlayer.MountedWeapon?.Data) continue;
+            obtainables.Add(weaponData);
+        }
+
+        int upgradeIndex = -1;
+        if (Random.value < 0.3f) upgradeIndex = Random.Range(0, obtainItems.Length);
 
         int count = Mathf.Min(obtainables.Count, obtainItems.Length);
+        var playerSkills = GameManager.Instance.SelfPlayer.GetSkills();
         for (int i = 0; i < obtainItems.Length; ++i)
         {
             obtainItems[i].gameObject.SetActive(i < count);
@@ -38,16 +65,29 @@ public class ObtainPanelUI : MonoBehaviour
             var obtainableObject = obtainables[idx];
             obtainables.RemoveAt(idx);
 
+            // 30% 확률로 칸 중 하나를 업그레이드용 칸으로 교체
+            if (i == upgradeIndex && alreadyOwnedSkills.Count > 0)
+            {
+                var ownedSkillDataArr = alreadyOwnedSkills.ToArray();
+                var upgradeData = ownedSkillDataArr[Random.Range(0, ownedSkillDataArr.Length)];
+                obtainableObject = upgradeData;
+                alreadyOwnedSkills.Remove(upgradeData);
+            }
+
             obtainItems[i].DescriptionText.SetText(obtainableObject.DescriptionSummary);
             obtainItems[i].IconImage.sprite = obtainableObject.Icon;
+            obtainItems[i].OutlinedIconImage.sprite = obtainableObject.Icon;
+
+            obtainItems[i].IconImage.gameObject.SetActive(obtainableObject is not PlayerSkillData);
+            obtainItems[i].OutlinedIconObject.gameObject.SetActive(obtainableObject is PlayerSkillData);
 
             if (obtainableObject is PlayerSkillData skillData)
             {
                 bool isUpgrade = false;
                 int targetIdx = 0;
-                for (int j = 0; j < GameManager.Instance.SelfPlayer.Skills.Length; j++)
+                for (int j = 0; j < GameManager.Instance.SelfPlayer.SkillLength; j++)
                 {
-                    if (GameManager.Instance.SelfPlayer.Skills[j] is not null && GameManager.Instance.SelfPlayer.Skills[j].Data == skillData)
+                    if (playerSkills[j] is not null && playerSkills[j].Data == skillData)
                     {
                         isUpgrade = true;
                         targetIdx = j;
@@ -58,16 +98,16 @@ public class ObtainPanelUI : MonoBehaviour
                 if (!isUpgrade)
                 {
                     bool isNewSkill = false;
-                    for (int j = 0; j < GameManager.Instance.SelfPlayer.Skills.Length; j++)
+                    for (int j = 0; j < playerSkills.Length; j++)
                     {
-                        if (GameManager.Instance.SelfPlayer.Skills[j] is null)
+                        if (playerSkills[j] is null)
                         {
                             isNewSkill = true;
                             targetIdx = j;
                             obtainItems[i].ObtainTypeText.SetText("스킬 (신규)");
                             break;
                         }
-                        if (GameManager.Instance.SelfPlayer.Skills[targetIdx].ObtainTime > GameManager.Instance.SelfPlayer.Skills[j].ObtainTime)
+                        if (playerSkills[targetIdx].ObtainTime > playerSkills[j].ObtainTime)
                         {
                             targetIdx = j;
                         }
@@ -75,7 +115,7 @@ public class ObtainPanelUI : MonoBehaviour
 
                     if (!isNewSkill)
                     {
-                        obtainItems[i].ObtainTypeText.SetText("스킬 (교체-" + GameManager.Instance.SelfPlayer.Skills[targetIdx].Data.Name + ")");
+                        obtainItems[i].ObtainTypeText.SetText($"스킬 (교체-{GameManager.Instance.SelfPlayer.SkillKeys[targetIdx]})");
                     }
                 }
                 else
@@ -86,10 +126,11 @@ public class ObtainPanelUI : MonoBehaviour
 
                 obtainItems[i].OnObtain = () =>
                 {
-                    if (!isUpgrade) GameManager.Instance.SelfPlayer.Skills[targetIdx] = new PlayerSkill(skillData);
-                    else GameManager.Instance.SelfPlayer.Skills[targetIdx].Level++;
+                    if (!isUpgrade) GameManager.Instance.SelfPlayer.SetSkill(targetIdx, new PlayerSkill(skillData));
+                    else playerSkills[targetIdx].Level++;
 
-                    NetworkManager.Instance.SendPacket("others", "change-skill", targetIdx + ":" + GameManager.Instance.SelfPlayer.Skills[targetIdx].Data.Name + ":" + GameManager.Instance.SelfPlayer.Skills[targetIdx].Level);
+                    var newSkill = GameManager.Instance.SelfPlayer.GetSkills()[targetIdx];
+                    NetworkManager.Instance.SendPacket("others", "change-skill", targetIdx + ":" + newSkill.Data.Name + ":" + newSkill.Level);
                     Close();
                 };
             }
@@ -108,5 +149,6 @@ public class ObtainPanelUI : MonoBehaviour
         }
 
         gameObject.SetActive(true);
+        _isOpening = false;
     }
 }

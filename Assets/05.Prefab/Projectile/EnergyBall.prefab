@@ -48,8 +48,8 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 1
-  m_Color: {r: 0.71132076, g: 1, b: 0.96037734, a: 1}
-  m_Intensity: 0.6
+  m_Color: {r: 0, g: 0.45081997, b: 1, a: 1}
+  m_Intensity: 2.18
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 4.36
+  m_PointLightOuterRadius: 2.76
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -111,7 +111,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.4870167, y: 4.857746, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3779941497857022483}
@@ -221,4 +221,7 @@ MonoBehaviour:
   Accelerate: 10
   PenetrateCount: 2
   LiveTime: 5
+  AllowNegativeSpeed: 0
+  OnlyTriggerWithPlayer: 0
   MaxLiveTime: 0
+  IsTriggerable: 1

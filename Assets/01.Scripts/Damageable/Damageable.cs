@@ -9,8 +9,9 @@ public class Damageable : MonoBehaviour
     public readonly Stat Stat = new();
     private readonly List<ShieldAmount> _shields = new();
     [SerializeField] protected HPBar hpBar;
+    [HideInInspector] public Player LastAttacker = null;
 
-    private Queue<Action> _lateTasks = new(); 
+    private readonly Queue<Action> _lateTasks = new(); 
 
     protected float hp = StatType.MaxHP.DefaultValue;
     public virtual float HP
@@ -52,7 +53,7 @@ public class Damageable : MonoBehaviour
         }
     }
 
-    public void AddShield(float amount, float time = float.MaxValue)
+    public virtual void AddShield(float amount, float time)
     {
         _shields.Add(new()
         {
@@ -88,19 +89,20 @@ public class Damageable : MonoBehaviour
         hpBar.Shield = ShieldAmount;
     }
 
-    public virtual void Damage(AttackParams attackParams, bool showDamage = true)
+    public virtual void Damage(AttackParams attackParams, Player attacker = null, bool showDamage = true)
     {
         DamageParams damageParams = Stat.GetDamageParams(attackParams, this);
-        Damage(damageParams.TotalDamage);
+        Damage(damageParams.TotalDamage, attacker);
         if (showDamage)
         {
             GameManager.Instance.ShowDamage(transform.position, damageParams);
         }
     }
 
-    public virtual void Damage(float amount)
+    public virtual void Damage(float amount, Player attacker = null)
     {
-        foreach(var shield in _shields)
+        LastAttacker = attacker;
+        foreach (var shield in _shields)
         {
             if (shield.Value > amount)
             {

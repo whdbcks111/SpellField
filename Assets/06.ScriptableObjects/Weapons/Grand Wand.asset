@@ -19,7 +19,7 @@ MonoBehaviour:
   Description: "\uB9E4\uC6B0 \uC791\uAC8C \uC555\uCD95\uD55C \uC5D0\uB108\uC9C0 \uAD6C\uCCB4\uB97C
     \uBE60\uB974\uAC8C \uBC1C\uC0AC\uD558\uC5EC \uB9C8\uBC95 \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
   DisplayObject: {fileID: 182028857364932153, guid: 0a11065e69579ee4190ec20b265e2f3f, type: 3}
-  Cooldown: 0.25
+  Cooldown: 0.12
   StatModifiers:
   - _statType: 4
     ModifyType: 0
@@ -33,4 +33,4 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 3658406521677521654, guid: 64e71e83b0bfc2845a0a460f70e3a0f5, type: 3}
   _isMagicAttack: 1
   _baseDamage: 5
-  _statMultiply: 0.1
+  _statMultiply: 0.2

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(CircleCollider2D), typeof(LineRenderer))]
@@ -14,6 +15,9 @@ public class SafeAreaControl : MonoBehaviour
 
     private LineRenderer _lineRenderer;
     private Collider2D _collider;
+
+    private float _multiplier;
+    private Vector2 _targetScale;
 
     public Collider2D Collider { get { return _collider; } }
 
@@ -39,24 +43,27 @@ public class SafeAreaControl : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        var multiplier = transform.localScale.x / Mathf.Max(Mathf.Epsilon, transform.lossyScale.x);
-        var targetScale = 2 * Radius * multiplier * Vector2.one;
+        _multiplier = transform.localScale.x / Mathf.Max(Mathf.Epsilon, transform.lossyScale.x);
+        _targetScale = 2 * Radius * _multiplier * Vector2.one;
 
         Vector2 currentScale = transform.localScale;
-        currentScale = Vector2.SmoothDamp(currentScale, targetScale, ref _scaleVel, 0.5f);
+        currentScale = Vector2.SmoothDamp(currentScale, _targetScale, ref _scaleVel, 0.5f, 100f, Time.fixedDeltaTime);
         transform.localScale = new(currentScale.x, currentScale.y, transform.localScale.z);
 
-        transform.position = Vector3.SmoothDamp(transform.position, Center, ref _moveVel, 0.5f);
+        transform.position = Vector3.SmoothDamp(transform.position, Center, ref _moveVel, 0.5f, 100f, Time.fixedDeltaTime);
 
-        Vector3[] positions = new Vector3[Mathf.Max((int)(CurrentRadius * 2f * Mathf.PI * 5f), 100)];
-        for(int i = 0; i < positions.Length; ++i)
+        var vertexCount = Mathf.Max((int)(CurrentRadius * 2f * Mathf.PI * 4f), 100);
+        _lineRenderer.positionCount = vertexCount;
+
+        float angle;
+        Vector3 pos;
+        for (int i = 0; i < vertexCount; ++i)
         {
-            var angle = (float)i / positions.Length * 2f * Mathf.PI;
-            positions[i] = transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * (CurrentRadius + _lineRenderer.startWidth / 2f);
+            angle = (float)i / vertexCount * 2f * Mathf.PI;
+            pos = transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * (CurrentRadius + _lineRenderer.startWidth / 2f);
+            _lineRenderer.SetPosition(i, pos);
         }
-        _lineRenderer.positionCount = positions.Length;
-        _lineRenderer.SetPositions(positions);
     }
 }

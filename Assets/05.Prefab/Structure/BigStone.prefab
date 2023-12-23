@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6158837565458253}
   - component: {fileID: 8374690512959325231}
   - component: {fileID: 8301147515758270569}
-  - component: {fileID: 2600788610866250937}
+  - component: {fileID: 8570097919635235308}
   m_Layer: 0
   m_Name: BigStone
   m_TagString: Untagged
@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 1170851999183088512}
+  LastAttacker: {fileID: 0}
   baseHP: 1500
   baseDefend: 100
   baseMagicResistance: 0
@@ -80,8 +81,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
---- !u!61 &2600788610866250937
-BoxCollider2D:
+--- !u!60 &8570097919635235308
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -112,7 +113,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.04282856, y: 0.014832139}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -122,9 +123,15 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 2.8192844, y: 1.557548}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.43733484, y: 1.6742244}
+      - {x: -0.8599451, y: 1.2110201}
+      - {x: -1.3166766, y: -0.65412766}
+      - {x: 0.27800655, y: -0.94568413}
+      - {x: 1.4339473, y: -0.44720772}
+      - {x: 1.1606128, y: 1.3294652}
+  m_UseDelaunayMesh: 0
 --- !u!1 &2448982549507217711
 GameObject:
   m_ObjectHideFlags: 0

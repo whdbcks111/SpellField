@@ -26,6 +26,12 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Image _damageScreen;
 
+    [SerializeField] private ChargeBar _chargeBar;
+    public ChargeBar ChargeBar { get => _chargeBar; }
+
+    [SerializeField] private WinnerUI _winnerUI;
+    public WinnerUI WinnerUI { get => _winnerUI; }
+
     private float _damageScreenTime = 0f, _maxDamageScreenTime = 1f;
     private bool _toggleDamageScreen = false;
 

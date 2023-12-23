@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea5d490525cb2a49a5b6ac20066062e, type: 3}
+  m_Name: NeonSpear
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 732a06f0799a87c4fa76da76a7c01e36, type: 3}
+  Name: "\uB124\uC628 \uC2A4\uD53C\uC5B4"
+  DescriptionSummary: "\uCC3D\uC744 \uB358\uC9C0\uACE0 \uC7AC\uC0AC\uC6A9 \uC2DC
+    \uB3CC\uC544\uC635\uB2C8\uB2E4."
+  Description: "\uCC3D\uC744 \uB358\uC9C0\uACE0 \uB098\uC11C \uC7AC\uC0AC\uC6A9 \uC2DC
+    \uB2E4\uC2DC \uC2DC\uC804\uC790\uC5D0\uAC8C \uB3CC\uC544\uC635\uB2C8\uB2E4.\n\uCC3D\uC740
+    \uC801\uC911 \uC2DC \uCD9C\uD608 \uD6A8\uACFC\uB97C \uC785\uD799\uB2C8\uB2E4."
+  DisplayObject: {fileID: 919476932125984869, guid: 03f4835aa6110254fac4acba60087807, type: 3}
+  Cooldown: 2
+  StatModifiers:
+  - _statType: 3
+    ModifyType: 0
+    Value: 100
+  - _statType: 5
+    ModifyType: 0
+    Value: 50
+  - _statType: 10
+    ModifyType: 0
+    Value: 30
+  _projectilePrefab: {fileID: 3658406521677521654, guid: 78942d115fb6e9c4d9ed788b3da90812, type: 3}
+  _isMagicAttack: 0
+  _baseDamage: 50
+  _statMultiply: 0.4
+  _bloodLevel: 2
+  _bloodTime: 2

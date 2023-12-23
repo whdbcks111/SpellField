@@ -16,11 +16,11 @@ MonoBehaviour:
   Name: "\uC9C0\uB8B0 \uC124\uCE58"
   DescriptionSummary: "\uC9C0\uB8B0\uB97C \uC124\uCE58\uD569\uB2C8\uB2E4."
   _prefab: {fileID: 1318953246379601323, guid: efe32873f33e5b84f89bf1549ef11b03, type: 3}
-  _baseDamage: 100
-  _damageAttackCoefficient: 0.5
-  _damageGrowth: 20
-  _baseManaCost: 70
-  _manaCostGrowth: 10
-  _baseCooldown: 10
-  _cooldownShrink: 2
-  _minCooldown: 2
+  _baseDamage: 120
+  _damageAttackCoefficient: 1
+  _damageGrowth: 50
+  _baseManaCost: 50
+  _manaCostGrowth: 5
+  _baseCooldown: 8
+  _cooldownShrink: 1
+  _minCooldown: 1
