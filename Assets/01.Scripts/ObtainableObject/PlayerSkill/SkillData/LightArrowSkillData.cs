@@ -9,6 +9,9 @@ using UnityEngine;
 public class LightArrowSkillData : PlayerSkillData
 {
     [SerializeField] private DamageProjectile _prefab;
+    [SerializeField] private AudioClip _shootSound;
+    [SerializeField] private float _shootSoundVolume = 1f;
+    [SerializeField] private float _shootSoundPitch = 1f;
 
     [Header("Damage")]
     [SerializeField] private float _baseDamage;
@@ -77,6 +80,7 @@ public class LightArrowSkillData : PlayerSkillData
                 p.PlayerRenderer.transform.position,
                 p.PlayerRenderer.transform.eulerAngles.z,
                 1, 1, 0, 0f, 1f);
+            SoundManager.Instance.PlaySFX(_shootSound, p.transform.position, _shootSoundVolume, _shootSoundPitch);
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         }
     }

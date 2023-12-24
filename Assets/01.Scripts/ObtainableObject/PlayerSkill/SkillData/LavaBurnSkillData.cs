@@ -9,6 +9,7 @@ using UnityEngine;
 public class LavaBurnSkillData : PlayerSkillData
 {
     [SerializeField] private DamageProjectile _prefab;
+    [SerializeField] private AudioClip _shootSound;
 
     [Header("Damage")]
     [SerializeField] private float _baseDamage;
@@ -84,6 +85,7 @@ public class LavaBurnSkillData : PlayerSkillData
 
     public override void OnActiveUse(Player p, PlayerSkill skill)
     {
+        SoundManager.Instance.PlaySFX(_shootSound, p.transform.position, 1f, 1f);
         Projectile.Shoot(() => GetProjectile(p, skill), p, 
             p.PlayerRenderer.transform.position, 
             p.PlayerRenderer.transform.eulerAngles.z,

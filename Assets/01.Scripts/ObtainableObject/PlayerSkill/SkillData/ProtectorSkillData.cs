@@ -9,6 +9,13 @@ using UnityEngine;
 public class ProtectorSkillData : PlayerSkillData
 {
     [SerializeField] private SpriteRenderer _shieldRenderer;
+    [SerializeField] private AudioClip _activeSound;
+    [SerializeField] private float _activeSoundVolume = 1f;
+    [SerializeField] private float _activeSoundPitch = 1f;
+
+    [SerializeField] private AudioClip _reflectSound;
+    [SerializeField] private float _reflectSoundVolume = 1f;
+    [SerializeField] private float _reflectSoundPitch = 1f;
 
     [Header("Protect")]
     [SerializeField] private float _baseShieldSize;
@@ -70,6 +77,7 @@ public class ProtectorSkillData : PlayerSkillData
                     projectile.Owner = p;
                     projectile.LiveTime = projectile.MaxLiveTime;
                     projectile.Direction = -projectile.Direction;
+                    SoundManager.Instance.PlaySFX(_reflectSound, p.transform.position, _reflectSoundVolume, _reflectSoundPitch);
                 }
             }
 
@@ -87,6 +95,7 @@ public class ProtectorSkillData : PlayerSkillData
     {
         var shield = Instantiate(_shieldRenderer, p.PlayerRenderer.transform.position, Quaternion.identity, p.PlayerRenderer.transform);
         var shieldSize = GetShieldSize(skill);
+        SoundManager.Instance.PlaySFX(_activeSound, p.transform.position, _activeSoundVolume, _activeSoundPitch);
         shield.transform.localScale = new Vector3(shieldSize, shieldSize, 1f);
         skill.SetData("shield", shield);
     }

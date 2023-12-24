@@ -10,6 +10,7 @@ public class BlinkSkillData : PlayerSkillData
 {
     [SerializeField] private ParticleSystem _blinkParticle;
     [SerializeField] private TrailRenderer _blinkTrail;
+    [SerializeField] private AudioClip _blinkSound;
 
     [Header("Blink")]
     [SerializeField] private float _baseMoveLength;
@@ -65,6 +66,7 @@ public class BlinkSkillData : PlayerSkillData
     {
         var trail = Instantiate(_blinkTrail, p.PlayerRenderer.transform.position, Quaternion.identity, p.PlayerRenderer.transform);
         await UniTask.Yield();
+        SoundManager.Instance.PlaySFX(_blinkSound, p.transform.position, 1f, 1f);
         if (p.IsSelf) p.transform.position += p.PlayerRenderer.transform.right * GetMoveLength(skill);
         await UniTask.Delay(TimeSpan.FromSeconds(0.4f));
         Destroy(trail.gameObject);

@@ -16,6 +16,12 @@ MonoBehaviour:
   Name: "\uD504\uB85C\uD14D\uD130"
   DescriptionSummary: "\uC8FC\uC704\uC758 \uD22C\uC0AC\uCCB4\uB97C \uC5ED\uAC00\uC18D\uC2DC\uD0B5\uB2C8\uB2E4."
   _shieldRenderer: {fileID: 1618031594816277411, guid: a81d77ec070a8a1439dbf25bbe33cea3, type: 3}
+  _activeSound: {fileID: 8300000, guid: d34584778e0c45042aa4ca2f6455490f, type: 3}
+  _activeSoundVolume: 1
+  _activeSoundPitch: 1
+  _reflectSound: {fileID: 8300000, guid: 0fb3017fb8b04434f8ea31fa72cfae02, type: 3}
+  _reflectSoundVolume: 1.2
+  _reflectSoundPitch: 0.6
   _baseShieldSize: 5
   _shieldSizeGrowth: 1
   _shieldShrinkSpeed: 1

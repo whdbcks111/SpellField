@@ -16,6 +16,7 @@ MonoBehaviour:
   Name: "\uB77C\uBC14 \uBC88"
   DescriptionSummary: "\uC8FC\uC704\uB85C \uC6A9\uC554 \uBD88\uB625\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
   _prefab: {fileID: 3658406521677521654, guid: 07339202a6db0504292ce9c703e353f3, type: 3}
+  _shootSound: {fileID: 8300000, guid: b3df5213ebd0c464ba5f415732f1443a, type: 3}
   _baseDamage: 10
   _damageMagicForceCoefficient: 0.1
   _damageGrowth: 5

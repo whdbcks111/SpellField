@@ -17,6 +17,7 @@ MonoBehaviour:
   DescriptionSummary: "\uC804\uBC29\uC73C\uB85C \uC21C\uAC04\uC774\uB3D9 \uD55C\uB2E4."
   _blinkParticle: {fileID: 522932239490844756, guid: e0923587b93e5f049893a024323fa7b3, type: 3}
   _blinkTrail: {fileID: 6731811499865633543, guid: 442deb8d010e5a14088e0b2b2a6c83d4, type: 3}
+  _blinkSound: {fileID: 8300000, guid: 6da02751197427e49bb6709f416f45a8, type: 3}
   _baseMoveLength: 7
   _lengthGrowth: 2
   _maxMoveLength: 30

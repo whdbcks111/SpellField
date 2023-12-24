@@ -1956,7 +1956,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelfPlayer: {fileID: 0}
   Seed: 0
-  _bgmSound: {fileID: 8300000, guid: d3c9d32837fe28a4591a7f1d80b68bcf, type: 3}
+  _bgm: {fileID: 8300000, guid: d3c9d32837fe28a4591a7f1d80b68bcf, type: 3}
   _bounceTextPrefab: {fileID: 3506595490683980568, guid: b49a3c1c81ff6b34b806d6d076ac39c0, type: 3}
   _virtualCam: {fileID: 746877833}
   _safeArea: {fileID: 1846825324}
