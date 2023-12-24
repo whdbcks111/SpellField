@@ -192,14 +192,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 9159896612521515348}
+  DamageSound: {fileID: 8300000, guid: c4fe98fc4e11d7249909c75cbdffc9cb, type: 3}
   LastAttacker: {fileID: 0}
   _worldCanvasGroup: {fileID: 1889717313219377244}
-  _walkAudioClips:
-  - {fileID: 8300000, guid: eb5a8f9e29859e54ca273c64d7712be7, type: 3}
-  - {fileID: 8300000, guid: b9fffe15ed6d1e041aff38e90a953967, type: 3}
-  - {fileID: 8300000, guid: 405c19c9ce64993438ee952f1fafe559, type: 3}
-  - {fileID: 8300000, guid: 4a45029d9aeef644bbd5315df126ea17, type: 3}
-  - {fileID: 8300000, guid: 20e5aaf95a27abe4993385449fe66f1c, type: 3}
   SkillKeys: 710000006500000072000000
   FlameParticle: {fileID: 7410692317018041836}
   BloodParticle: {fileID: 5423826825352625727}

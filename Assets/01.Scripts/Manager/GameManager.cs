@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Player SelfPlayer = null;
     [HideInInspector] public int Seed;
 
-    [SerializeField] private AudioClip _bgmSound;
+    [SerializeField] private AudioClip _bgm;
     [SerializeField] private TextMeshProUGUI _bounceTextPrefab;
     [SerializeField] private CinemachineVirtualCamera _virtualCam;
     [SerializeField] private SafeAreaControl _safeArea;
@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        SoundManager.Instance.PlayBGM(_bgmSound);
+        SoundManager.Instance.PlayBGM(_bgm);
     }
 
     private void GenerateStructures()

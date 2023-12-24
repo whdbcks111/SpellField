@@ -24,6 +24,7 @@ MonoBehaviour:
   - _statType: 3
     ModifyType: 0
     Value: 25
+  _swingSoundPitch: 1.5
   _swingRotation: -150
   _dashSpeed: 10
   _dashAccelerate: -20

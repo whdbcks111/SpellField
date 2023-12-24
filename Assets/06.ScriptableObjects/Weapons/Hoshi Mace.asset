@@ -28,5 +28,6 @@ MonoBehaviour:
   - _statType: 2
     ModifyType: 0
     Value: 2
+  _swingSoundPitch: 0.4
   _swingRotation: -170
   _knockback: 15

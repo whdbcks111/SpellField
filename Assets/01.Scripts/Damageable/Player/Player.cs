@@ -51,7 +51,6 @@ public class Player : Damageable
     public PlayerHand Hand { get { return _hand; } }
 
     [SerializeField] private CanvasGroup _worldCanvasGroup;
-    [SerializeField] private AudioClip[] _walkAudioClips;
     [SerializeField] public KeyCode[] SkillKeys;
     [HideInInspector] private PlayerSkill[] _skills;
 
@@ -90,7 +89,6 @@ public class Player : Damageable
     private float _beforeRotZ, _smoothRotZ;
     private float _sendSyncPacketTimer = 0f;
     private float _damageTintTimer = 0f;
-    private float _walkSoundTimer = 0f;
     private Vector2 _knockbackForce = Vector2.zero;
 
     private Color _originalColor;
@@ -424,23 +422,6 @@ public class Player : Damageable
         UpdatePlayerStates();
         UpdateDamageTint();
         UpdateTintColorModifiers();
-        UpdateWalkSound();
-    }
-
-    private void UpdateWalkSound()
-    {
-        if(_walkSoundTimer > 0f) _walkSoundTimer -= Time.deltaTime;
-        var vel = _rigid.velocity.magnitude;
-        if (Mode == GameMode.Survival && vel > 0.1f)
-        {
-            if(_walkSoundTimer <= 0f)
-            {
-                _walkSoundTimer = Mathf.Clamp(1f / vel + 0.1f, 0.1f, 1f);
-                SoundManager.Instance.PlaySFX(
-                    _walkAudioClips[UnityEngine.Random.Range(0, _walkAudioClips.Length)], 
-                    transform, 0.05f, 3f);
-            }
-        }
     }
 
     public void SetSkin(SkinData data)

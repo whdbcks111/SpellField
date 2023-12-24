@@ -10,11 +10,16 @@ using UnityEngine;
 public class MeleeAttackWeaponData : WeaponData
 {
 
+    [SerializeField] private float _swingSoundPitch = 1f;
     [SerializeField] private float _swingRotation = 30f;
+
+    private AudioClip[] _swingSounds = null;
 
     public override void OnMount(Player p, Weapon weapon)
     {
         base.OnMount(p, weapon);
+
+        if (_swingSounds == null) _swingSounds = SoundManager.GetClips("SFX/Swing");
 
         weapon.SetData("attackedObjects", new HashSet<Damageable>());
         weapon.SetData("isAttacking", false);
@@ -67,6 +72,8 @@ public class MeleeAttackWeaponData : WeaponData
         
 
         weapon.SetData("isAttacking", true);
+        SoundManager.Instance.PlaySFX(_swingSounds[UnityEngine.Random.Range(0, _swingSounds.Length)], 
+            weapon.Display.transform.position, 0.3f, _swingSoundPitch);
         await UniTask.Delay(TimeSpan.FromSeconds(time));
         weapon.SetData("isAttacking", false);
 

@@ -10,6 +10,8 @@ using static Unity.VisualScripting.Member;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance { get; private set; }
+    public static Dictionary<string, AudioClip> clipCache = new();
+    public static Dictionary<string, AudioClip[]> clipsCache = new();
 
     public AudioSource AudioSourcePrefab;
     public AudioMixerGroup MasterMixerGroup, SFXMixerGroup, BGMMixerGroup;
@@ -17,6 +19,25 @@ public class SoundManager : MonoBehaviour
     private ObjectPool<AudioSource> _sourcePool;
 
     private AudioSource _bgmSource = null;
+
+    public static AudioClip GetClip(string path)
+    {
+        if (clipCache.ContainsKey(path)) return clipCache[path];
+        var clip = Resources.Load<AudioClip>("Audio/" + path);
+        if(clip != null) clipCache[path] = clip;
+        return clip;
+    }
+    public static AudioClip[] GetClips(string path)
+    {
+        if (clipsCache.ContainsKey(path)) return clipsCache[path];
+        var clips = Resources.LoadAll<AudioClip>("Audio/" + path);
+        if (clips != null && clips.Length > 0)
+        {
+            clipsCache[path] = clips;
+            return clips;
+        }
+        return null;
+    }
 
     private void Awake()
     {

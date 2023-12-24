@@ -30,6 +30,7 @@ MonoBehaviour:
   - _statType: 3
     ModifyType: 0
     Value: 10
+  _swingSoundPitch: 2
   _swingRotation: -170
   _fireLevel: 3
   _fireTime: 2

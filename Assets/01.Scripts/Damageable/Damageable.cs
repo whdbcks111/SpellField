@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 using System;
 
 public class Damageable : MonoBehaviour
@@ -9,6 +8,8 @@ public class Damageable : MonoBehaviour
     public readonly Stat Stat = new();
     private readonly List<ShieldAmount> _shields = new();
     [SerializeField] protected HPBar hpBar;
+    [SerializeField] private AudioClip DamageSound;
+    [SerializeField] private float _damageSoundPitch = 1f;
     [HideInInspector] public Player LastAttacker = null;
 
     private readonly Queue<Action> _lateTasks = new(); 
@@ -95,6 +96,7 @@ public class Damageable : MonoBehaviour
         Damage(damageParams.TotalDamage, attacker);
         if (showDamage)
         {
+            SoundManager.Instance.PlaySFX(DamageSound, transform.position, 0.5f, _damageSoundPitch * UnityEngine.Random.Range(0.9f, 1.1f));
             GameManager.Instance.ShowDamage(transform.position, damageParams);
         }
     }

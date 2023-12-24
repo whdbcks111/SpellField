@@ -29,4 +29,5 @@ MonoBehaviour:
   - _statType: 5
     ModifyType: 0
     Value: 30
+  _swingSoundPitch: 0.5
   _swingRotation: -160
