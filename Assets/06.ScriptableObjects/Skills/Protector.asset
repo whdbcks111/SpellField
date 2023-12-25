@@ -20,8 +20,8 @@ MonoBehaviour:
   _activeSoundVolume: 1
   _activeSoundPitch: 1
   _reflectSound: {fileID: 8300000, guid: 0fb3017fb8b04434f8ea31fa72cfae02, type: 3}
-  _reflectSoundVolume: 1.2
-  _reflectSoundPitch: 0.6
+  _reflectSoundVolume: 0.6
+  _reflectSoundPitch: 1
   _baseShieldSize: 5
   _shieldSizeGrowth: 1
   _shieldShrinkSpeed: 1

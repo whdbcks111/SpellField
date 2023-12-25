@@ -7,6 +7,10 @@ public class ThrowingWeaponData : WeaponData
     [SerializeField] private bool _isMagicAttack;
     [SerializeField] private float _baseDamage, _statMultiply;
 
+    [SerializeField] private AudioClip _shootSound;
+    [SerializeField] private float _shootSoundVolume = 1f;
+    [SerializeField] private float _shootSoundPitch = 1f;
+
     protected virtual DamageProjectile GetProjectile(Player p, Weapon weapon)
     {
         var projectile = Instantiate(_projectilePrefab);
@@ -20,6 +24,7 @@ public class ThrowingWeaponData : WeaponData
 
     protected virtual void Shoot(Player p, Weapon weapon)
     {
+        SoundManager.Instance.PlaySFX(_shootSound, p.transform.position, _shootSoundVolume, _shootSoundPitch);
         var projectile = GetProjectile(p, weapon);
         projectile.transform.position = weapon.Display.transform.position;
         projectile.Direction = p.PlayerRenderer.transform.right;

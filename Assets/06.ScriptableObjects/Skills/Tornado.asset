@@ -17,6 +17,9 @@ MonoBehaviour:
   DescriptionSummary: "\uBC14\uB78C \uD68C\uC624\uB9AC\uB97C \uC0AC\uBC29\uC73C\uB85C
     \uB0A0\uB9BD\uB2C8\uB2E4."
   _prefab: {fileID: 3658406521677521654, guid: da1550d4b5235e04a903e0ed0fb624b4, type: 3}
+  _activeSound: {fileID: 8300000, guid: a4553defcd5499a41a8d65a2db6d6c7c, type: 3}
+  _activeSoundVolume: 1
+  _activeSoundPitch: 1
   _baseDamage: 50
   _damageMagicForceCoefficient: 1
   _damageGrowth: 30

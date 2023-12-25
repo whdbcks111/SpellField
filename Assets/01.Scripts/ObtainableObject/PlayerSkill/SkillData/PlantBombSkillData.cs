@@ -9,6 +9,9 @@ using UnityEngine;
 public class PlantBombSkillData : PlayerSkillData
 {
     [SerializeField] private BombProjectile _prefab;
+    [SerializeField] private AudioClip _plantSound;
+    [SerializeField] private float _plantSoundVolume = 1f;
+    [SerializeField] private float _plantSoundPitch = 1f;
 
     [Header("Damage")]
     [SerializeField] private float _baseDamage;
@@ -51,6 +54,7 @@ public class PlantBombSkillData : PlayerSkillData
 
     public override void OnActiveUse(Player p, PlayerSkill skill)
     {
+        SoundManager.Instance.PlaySFX(_plantSound, p.transform.position, _plantSoundVolume, _plantSoundPitch);
         var projectile = GetProjectile(p, skill);
         projectile.transform.position = p.PlayerRenderer.transform.position;
         projectile.Owner = p;

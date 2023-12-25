@@ -32,6 +32,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private WinnerUI _winnerUI;
     public WinnerUI WinnerUI { get => _winnerUI; }
 
+    [SerializeField] private ChattingPanel _chattingPanel;
+    public ChattingPanel ChattingPanel { get => _chattingPanel; }
+
     private float _damageScreenTime = 0f, _maxDamageScreenTime = 1f;
     private bool _toggleDamageScreen = false;
 

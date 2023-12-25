@@ -17,6 +17,9 @@ MonoBehaviour:
   DescriptionSummary: "\uBE59\uACB0 \uC5D0\uB108\uC9C0\uB97C \uBC1C\uC0AC\uD574 \uAD11\uC5ED
     \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
   _prefab: {fileID: 6873981422010183296, guid: a7e2020eafc02a14ea24e1f367168183, type: 3}
+  _shootSound: {fileID: 8300000, guid: ca7a861bc54dc7643acd076d94cd6a7a, type: 3}
+  _shootSoundVolume: 1
+  _shootSoundPitch: 1
   _baseDamage: 70
   _damageMagicForceCoefficient: 1.1
   _damageGrowth: 20

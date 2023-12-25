@@ -69,6 +69,18 @@ public class NetworkClient : MonoBehaviour, IClient
     {
         switch (eventName)
         {
+            case "chat":
+                {
+                    if (GameManager.Instance != null)
+                        GameManager.Instance.UIManager.ChattingPanel.AddChat(message);
+                }
+                break;
+            case "room-chat":
+                {
+                    if (RoomChattingPanel.Instance != null)
+                        RoomChattingPanel.Instance.AddChat(message);
+                }
+                break;
             case "ready":
                 if (NetworkManager.Instance.PingData.RoomState.ContainsKey("ready__" + from))
                 {

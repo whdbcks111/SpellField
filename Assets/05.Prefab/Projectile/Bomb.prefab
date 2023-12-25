@@ -224,11 +224,15 @@ MonoBehaviour:
   LiveTime: 150
   AllowNegativeSpeed: 0
   OnlyTriggerWithPlayer: 1
+  FixedRotation: 0
   MaxLiveTime: 0
   IsTriggerable: 1
   _waitTime: 1
   _waitColor: {r: 0, g: 1, b: 0.6812067, a: 1}
   _detectColor: {r: 1, g: 0.19345713, b: 0, a: 1}
+  _activeSound: {fileID: 8300000, guid: 00131ade914c48b44b998e00e807440a, type: 3}
+  _activeSoundVolume: 1
+  _activeSoundPitch: 1
   _bombRenderer: {fileID: 4142329497306743348}
   _explodeParticle: {fileID: 522932239490844756, guid: ebd62cad6b49063488aeb4d20cea184c, type: 3}
   _smokeParticle: {fileID: 522932239490844756, guid: dcc219889a6b23b47b5c9eabcf20083a, type: 3}

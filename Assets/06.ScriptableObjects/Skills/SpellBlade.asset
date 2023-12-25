@@ -18,6 +18,9 @@ MonoBehaviour:
     \uD718\uB450\uB974\uACE0 \uAE30\uC808\uC2DC\uD0B5\uB2C8\uB2E4."
   _prefab: {fileID: 6685530130148985836, guid: 2ebd824f83255134d8dbcbce99c04caa, type: 3}
   _bladeDistance: 3
+  _activeSound: {fileID: 8300000, guid: f6154c5cd47066242a1021ea562ad72b, type: 3}
+  _activeSoundVolume: 1
+  _activeSoundPitch: 1
   _baseDamage: 70
   _damageAttackCoefficient: 0.4
   _damageGrowth: 10

@@ -94,9 +94,10 @@ public class Damageable : MonoBehaviour
     {
         DamageParams damageParams = Stat.GetDamageParams(attackParams, this);
         Damage(damageParams.TotalDamage, attacker);
+
+        SoundManager.Instance.PlaySFX(DamageSound, transform.position, 0.5f, _damageSoundPitch * UnityEngine.Random.Range(0.9f, 1.1f));
         if (showDamage)
         {
-            SoundManager.Instance.PlaySFX(DamageSound, transform.position, 0.5f, _damageSoundPitch * UnityEngine.Random.Range(0.9f, 1.1f));
             GameManager.Instance.ShowDamage(transform.position, damageParams);
         }
     }

@@ -17,6 +17,9 @@ MonoBehaviour:
   DescriptionSummary: "\uC7A0\uC2DC \uB3D9\uC548 \uD22C\uBA85\uD654 \uC0C1\uD0DC\uAC00
     \uB429\uB2C8\uB2E4."
   _stealthParticle: {fileID: 522932239490844756, guid: 5dee48558eb95294ca61a6aec6936676, type: 3}
+  _activeSound: {fileID: 8300000, guid: c98301cc3f911e84c8a983ede50f50f4, type: 3}
+  _activeSoundVolume: 1
+  _activeSoundPitch: 1
   _stealthTime: 4
   _stealthTimeGrowth: 2
   _speedUpTime: 2

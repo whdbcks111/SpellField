@@ -17,6 +17,12 @@ MonoBehaviour:
   DescriptionSummary: "\uAD11\uC591\uC790\uD3EC\uB97C \uCDA9\uC804\uD574 \uBC1C\uC0AC\uD55C\uB2E4."
   _prefab: {fileID: 3658406521677521654, guid: 6f9b3b352a2df6e4bb65e3622043c928, type: 3}
   _compressParticle: {fileID: 522932239490844756, guid: 71465e9492cb8534da9d62992cc5392b, type: 3}
+  _shootSound: {fileID: 8300000, guid: d34584778e0c45042aa4ca2f6455490f, type: 3}
+  _shootSoundVolume: 1.5
+  _shootSoundPitch: 2
+  _chargeSound: {fileID: 8300000, guid: 98b5d5c57feb61d4f860046cdfe60889, type: 3}
+  _chargeSoundVolume: 0.6
+  _chargeSoundPitch: 0.88
   _baseDamage: 150
   _damageMagicForceCoefficient: 1
   _damageGrowth: 50

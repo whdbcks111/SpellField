@@ -7,6 +7,14 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 [CreateAssetMenu(fileName = "New Dagger Shooter Data", menuName = "ScriptableObjects/WeaponData/DaggerShooter", order = 0)]
 public class DaggerTenburaData : WeaponData
 {
+    [SerializeField] private AudioClip _spawnSound;
+    [SerializeField] private float _spawnSoundVolume = 1f;
+    [SerializeField] private float _spawnSoundPitch = 1f;
+
+    [SerializeField] private AudioClip _activeSound;
+    [SerializeField] private float _activeSoundVolume = 1f;
+    [SerializeField] private float _activeSoundPitch = 1f;
+
     [SerializeField] private DaggerTenburaProjectile _projectilePrefab;
     [SerializeField] private float _baseDamage, _attackCoefficient;
     [SerializeField] private int _maxProjectileCount;
@@ -43,9 +51,11 @@ public class DaggerTenburaData : WeaponData
             dagger.IsWaiting = true;
             list.Add(dagger);
             weapon.CurrentCooldown *= 0.3f;
+            SoundManager.Instance.PlaySFX(_spawnSound, p.transform.position, _spawnSoundVolume, _spawnSoundPitch);
         }
         else
         {
+            SoundManager.Instance.PlaySFX(_activeSound, p.transform.position, _activeSoundVolume, _activeSoundPitch);
             dagger.IsWaiting = false;
             foreach(var projectile in list)
             {

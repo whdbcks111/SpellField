@@ -9,6 +9,8 @@ public class Minimap : MonoBehaviour
 {
     private Image _minimapImage;
     [SerializeField] private Image _selfPointPrefab, _otherPointPrefab;
+    [SerializeField] private RectTransform _safeAreaCircle;
+    [SerializeField] private float zoom = 2f;
 
     private float _width;
     public readonly Dictionary<string, Image> _points = new();
@@ -21,7 +23,12 @@ public class Minimap : MonoBehaviour
 
     private Vector2 ConvertToAnchoredPos(Vector2 pos)
     {
-        return _width * pos / (2 * GameManager.Instance.MapRadius);
+        return _width * (pos - (Vector2)GameManager.Instance.SelfPlayer.transform.position) / (2 * GameManager.Instance.MapRadius / zoom);
+    }
+
+    private float ConvertToMinimapSize(float size)
+    {
+        return size * _width / (2 * GameManager.Instance.MapRadius / zoom);
     }
 
     private void Update()
@@ -38,6 +45,9 @@ public class Minimap : MonoBehaviour
                 _points.Remove(key);
             }
         }
+
+        _safeAreaCircle.anchoredPosition = ConvertToAnchoredPos(GameManager.Instance.SafeArea.Center);
+        _safeAreaCircle.sizeDelta = Vector2.one * ConvertToMinimapSize(GameManager.Instance.SafeArea.Radius * 2);
 
         foreach (string uid in Player.PlayerMap.Keys)
         {

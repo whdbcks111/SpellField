@@ -16,6 +16,9 @@ MonoBehaviour:
   Name: "\uC9C0\uB8B0 \uC124\uCE58"
   DescriptionSummary: "\uC9C0\uB8B0\uB97C \uC124\uCE58\uD569\uB2C8\uB2E4."
   _prefab: {fileID: 1318953246379601323, guid: efe32873f33e5b84f89bf1549ef11b03, type: 3}
+  _plantSound: {fileID: 8300000, guid: 7f2f78482bb2c1d40a6d068035ccca2b, type: 3}
+  _plantSoundVolume: 1
+  _plantSoundPitch: 1
   _baseDamage: 120
   _damageAttackCoefficient: 1
   _damageGrowth: 50

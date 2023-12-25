@@ -6,6 +6,10 @@ public class BombProjectile : DamageProjectile
     [SerializeField] private float _waitTime;
     [SerializeField] private Color _waitColor, _detectColor;
 
+    [SerializeField] private AudioClip _activeSound;
+    [SerializeField] private float _activeSoundVolume = 1f;
+    [SerializeField] private float _activeSoundPitch = 1f;
+
     [Header("References")]
     [SerializeField] private SpriteRenderer _bombRenderer;
     [SerializeField] private ParticleSystem _explodeParticle;
@@ -41,6 +45,7 @@ public class BombProjectile : DamageProjectile
     {
         base.OnCollision(damageable);
 
+        SoundManager.Instance.PlaySFX(_activeSound, transform.position, _activeSoundVolume, _activeSoundPitch);
         ParticleManager.SpawnParticle(_explodeParticle, transform.position);
         ParticleManager.SpawnParticle(_smokeParticle, transform.position);
     }

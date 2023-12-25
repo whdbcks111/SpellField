@@ -9,6 +9,9 @@ using UnityEngine;
 public class HealSkillData : PlayerSkillData
 {
     [SerializeField] private ParticleSystem _healParticle;
+    [SerializeField] private AudioClip _healSound;
+    [SerializeField] private float _healSoundVolume = 1f;
+    [SerializeField] private float _healSoundPitch = 1f;
 
     [Header("Heal")]
     [SerializeField] private float _baseHealAmount;
@@ -56,6 +59,7 @@ public class HealSkillData : PlayerSkillData
     public override void OnActiveUse(Player p, PlayerSkill skill)
     {
         skill.SetData("speedUpTimer", _speedUpTime);
+        SoundManager.Instance.PlaySFX(_healSound, p.transform.position, _healSoundVolume, _healSoundPitch);
         p.HP += GetHealAmount(p, skill);
         ParticleManager.SpawnParticle(_healParticle, p.PlayerRenderer.transform);
     }

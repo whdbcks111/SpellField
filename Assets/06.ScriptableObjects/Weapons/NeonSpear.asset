@@ -35,5 +35,8 @@ MonoBehaviour:
   _isMagicAttack: 0
   _baseDamage: 50
   _statMultiply: 0.4
+  _shootSound: {fileID: 8300000, guid: 93dc7c12ad95402478c79b08aa4abb87, type: 3}
+  _shootSoundVolume: 0.3
+  _shootSoundPitch: 0.6
   _bloodLevel: 2
   _bloodTime: 2

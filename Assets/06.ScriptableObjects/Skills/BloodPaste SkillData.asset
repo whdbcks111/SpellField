@@ -18,8 +18,8 @@ MonoBehaviour:
     \uD0C0\uACA9 \uC2DC \uCCB4\uB825\uC744 \uD68C\uBCF5\uD569\uB2C8\uB2E4."
   _prefab: {fileID: 3658406521677521654, guid: 7ee6ce95cf494ca4d8bfaa53d020c9df, type: 3}
   _shootSound: {fileID: 8300000, guid: e587303863ada034493b5d1b87218cee, type: 3}
-  _shootSoundVolume: 0.5
-  _shootSoundPitch: 0.6
+  _shootSoundVolume: 0.38
+  _shootSoundPitch: 1
   _baseDamage: 30
   _damageMagicForceCoefficient: 0.4
   _damageGrowth: 10

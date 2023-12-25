@@ -30,3 +30,6 @@ MonoBehaviour:
   _isMagicAttack: 1
   _baseDamage: 20
   _statMultiply: 0.2
+  _activeSound: {fileID: 8300000, guid: 0dfd1e14f2123d043ac40433b3e6b553, type: 3}
+  _activeSoundVolume: 1
+  _activeSoundPitch: 1.72

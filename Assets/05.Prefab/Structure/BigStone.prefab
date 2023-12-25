@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBar: {fileID: 1170851999183088512}
   DamageSound: {fileID: 8300000, guid: 7f2f78482bb2c1d40a6d068035ccca2b, type: 3}
-  _damageSoundPitch: 0.7
+  _damageSoundPitch: 0.43
   LastAttacker: {fileID: 0}
   baseHP: 1500
   baseDefend: 100

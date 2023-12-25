@@ -9,6 +9,9 @@ using UnityEngine;
 public class TornadoSkillData : PlayerSkillData
 {
     [SerializeField] private DamageProjectile _prefab;
+    [SerializeField] private AudioClip _activeSound;
+    [SerializeField] private float _activeSoundVolume = 1f;
+    [SerializeField] private float _activeSoundPitch = 1f;
 
     [Header("Damage")]
     [SerializeField] private float _baseDamage;
@@ -81,6 +84,7 @@ public class TornadoSkillData : PlayerSkillData
 
     public override void OnActiveUse(Player p, PlayerSkill skill)
     {
+        SoundManager.Instance.PlaySFX(_activeSound, p.transform.position, _activeSoundVolume, _activeSoundPitch);
         Projectile.Shoot(() => GetProjectile(p, skill), p, 
             p.PlayerRenderer.transform.position, 
             p.PlayerRenderer.transform.eulerAngles.z,

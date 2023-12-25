@@ -9,6 +9,9 @@ using UnityEngine;
 public class StealthSkillData : PlayerSkillData
 {
     [SerializeField] private ParticleSystem _stealthParticle;
+    [SerializeField] private AudioClip _activeSound;
+    [SerializeField] private float _activeSoundVolume = 1f;
+    [SerializeField] private float _activeSoundPitch = 1f;
 
     [Header("Stealth")]
     [SerializeField] private float _stealthTime;
@@ -60,6 +63,7 @@ public class StealthSkillData : PlayerSkillData
 
     public override void OnActiveUse(Player p, PlayerSkill skill)
     {
+        SoundManager.Instance.PlaySFX(_activeSound, p.transform.position, _activeSoundVolume, _activeSoundPitch);
         skill.SetData("speedUpTimer", _speedUpTime);
         ParticleManager.SpawnParticle(_stealthParticle, p.PlayerRenderer.transform);
         p.AddEffect(new Effect(EffectType.Invisibility, 1, GetStealthTime(skill), p));

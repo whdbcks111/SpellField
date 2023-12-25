@@ -34,6 +34,12 @@ MonoBehaviour:
   - _statType: 2
     ModifyType: 0
     Value: 1.2
+  _spawnSound: {fileID: 8300000, guid: 203135b427ddd9c468941f8b73e7049b, type: 3}
+  _spawnSoundVolume: 0.5
+  _spawnSoundPitch: 1
+  _activeSound: {fileID: 8300000, guid: 0fb3017fb8b04434f8ea31fa72cfae02, type: 3}
+  _activeSoundVolume: 2
+  _activeSoundPitch: 0.6
   _projectilePrefab: {fileID: 1879818373294622659, guid: 690e5c25971bd664a8bb959ff52004a2, type: 3}
   _baseDamage: 30
   _attackCoefficient: 0.4

@@ -111,12 +111,13 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlaySFX(AudioClip clip, Vector3 pos, 
+    public void PlaySFX(AudioClip clip, Vector3 pos,
         float volume = 1f, float pitch = 1f, Transform parent = null)
     {
         var source = _sourcePool.Get();
         source.transform.SetParent(parent);
         source.transform.position = pos;
+        source.loop = false;
 
         source.outputAudioMixerGroup = SFXMixerGroup;
         source.clip = clip;
@@ -127,13 +128,55 @@ public class SoundManager : MonoBehaviour
         AudioSourceReleaseCheckTask(source, _sourcePool).Forget();
     }
 
-    public void PlaySFX(AudioClip clip, Vector3 pos, float volume = 1f, Transform parent = null)
+    public SFXController PlayLoopSFX(AudioClip clip, Vector3 pos,
+        float volume = 1f, float pitch = 1f, Transform parent = null)
     {
-        PlaySFX(clip, pos, volume, 1f, parent);
+        var source = _sourcePool.Get();
+        source.transform.SetParent(parent);
+        source.transform.position = pos;
+        source.loop = true;
+
+        source.outputAudioMixerGroup = SFXMixerGroup;
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.Play();
+
+        AudioSourceReleaseCheckTask(source, _sourcePool).Forget();
+
+        return new(source);
+    }
+}
+
+public class SFXController
+{
+    private AudioSource _source;
+
+    public float Volume 
+    { 
+        get => _source != null ? _source.volume : 0;
+        set {
+            if(_source != null) _source.volume = value; 
+        } 
+    }
+    public float Pitch
+    {
+        get => _source != null ? _source.pitch : 0;
+        set
+        {
+            if (_source != null) _source.pitch = value;
+        }
     }
 
-    public void PlaySFX(AudioClip clip, Transform parent, float volume = 1f, float pitch = 1f)
+    public SFXController(AudioSource source)
     {
-        PlaySFX(clip, parent.position, volume, pitch, parent);
+        _source = source;
+    }
+
+    public void Stop()
+    {
+        if (_source == null) return;
+        _source.Stop();
+        _source = null;
     }
 }

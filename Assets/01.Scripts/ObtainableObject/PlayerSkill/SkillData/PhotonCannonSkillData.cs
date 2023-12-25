@@ -10,6 +10,12 @@ public class PhotonCannonSkillData : PlayerSkillData
 {
     [SerializeField] private DamageProjectile _prefab;
     [SerializeField] private ParticleSystem _compressParticle;
+    [SerializeField] private AudioClip _shootSound;
+    [SerializeField] private float _shootSoundVolume = 1f;
+    [SerializeField] private float _shootSoundPitch = 1f;
+    [SerializeField] private AudioClip _chargeSound;
+    [SerializeField] private float _chargeSoundVolume = 1f;
+    [SerializeField] private float _chargeSoundPitch = 1f;
 
     [Header("Damage")]
     [SerializeField] private float _baseDamage;
@@ -49,7 +55,7 @@ public class PhotonCannonSkillData : PlayerSkillData
     {
         return GetChargeRate(skill) * (_maxSize - _minSize) + _minSize;
     }
-    
+
     public override string GetDescription(Player p, PlayerSkill skill)
     {
         var attackParams = GetProjectileParams(p, skill);
@@ -81,14 +87,26 @@ public class PhotonCannonSkillData : PlayerSkillData
         skill.SetData("maxDamage", projectile.AttackParams.Damage);
         skill.SetData("projectile", projectile);
         skill.SetData("particle", particle);
+        skill.SetData("sfxController", SoundManager.Instance.PlayLoopSFX(
+            _chargeSound, p.transform.position,
+            _chargeSoundVolume, _chargeSoundPitch, p.transform
+            ));
     }
 
     public override void OnCharging(Player p, PlayerSkill skill)
     {
-        if(p.IsSelf) GameManager.Instance.UIManager.ChargeBar.Progress = GetChargeRate(skill);
+        var progress = GetChargeRate(skill);
+        if (p.IsSelf) GameManager.Instance.UIManager.ChargeBar.Progress = progress;
         var projectile = skill.GetData<DamageProjectile>("projectile");
         var maxDamage = skill.GetData("maxDamage", 0f);
         if (projectile == null) return;
+
+
+        var chargeSFXController = skill.GetData<SFXController>("sfxController");
+        if(chargeSFXController != null)
+        {
+            chargeSFXController.Volume = progress * 0.8f + 0.6f;
+        }
 
 
         projectile.transform.position = p.PlayerRenderer.transform.position + p.PlayerRenderer.transform.right * 1.3f;
@@ -109,9 +127,12 @@ public class PhotonCannonSkillData : PlayerSkillData
         var projectile = skill.GetData<DamageProjectile>("projectile");
         var particle = skill.GetData<ParticleSystem>("particle");
         var speed = skill.GetData("speed", 0f);
+        var chargeSFXController = skill.GetData<SFXController>("sfxController");
         if (projectile == null) return;
         if (particle != null) Destroy(particle.gameObject);
 
+        chargeSFXController.Stop();
+        SoundManager.Instance.PlaySFX(_shootSound, p.transform.position, _shootSoundVolume, _shootSoundPitch);
         projectile.Speed = speed;
         projectile.IsTriggerable = true;
     }
