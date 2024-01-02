@@ -117,13 +117,14 @@ public class EffectType : Enumeration<EffectType>
         },
         onUpdate: (p, eff) =>
         {
-            var col1 = new Color(0.6f, 1f, 1f, 0.4f);
-            var col2 = new Color(1f, 1f, 0.5f, 0.4f);
-            p.AddTintColorModifier("eff_strength", Color.Lerp(col1, col2, Mathf.Sin(Time.time * Mathf.PI * 2) * 0.5f + 0.5f), 0.1f);
-            p.Stat.Multiply(StatType.Attack, 1 + eff.Level * 0.1f);
-            p.Stat.Multiply(StatType.MagicForce, 1 + eff.Level * 0.1f);
-            p.Stat.Add(StatType.Defend, eff.Level * 10f);
-            p.Stat.Add(StatType.MagicResistance, eff.Level * 10f);
+            var col1 = new Color(0.6f, 1f, 1f, 0.6f);
+            var col2 = new Color(1f, 1f, 0.5f, 0.6f);
+            p.AddTintColorModifier("eff_strength", Color.Lerp(col1, col2, Mathf.Sin(Time.time * Mathf.PI / 0.35f) * 0.5f + 0.5f), 0.1f);
+            p.Stat.Multiply(StatType.Attack, 1 + eff.Level * 0.2f);
+            p.Stat.Multiply(StatType.MagicForce, 1 + eff.Level * 0.2f);
+            p.Stat.Add(StatType.Attack, eff.Level * 10f);
+            p.Stat.Add(StatType.MagicForce, eff.Level * 10f);
+            p.Stat.Multiply(StatType.MoveSpeed, 1 + eff.Level * 0.2f);
         },
         onFinish: (p, eff) =>
         {

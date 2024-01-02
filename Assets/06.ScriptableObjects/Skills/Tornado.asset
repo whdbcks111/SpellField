@@ -20,10 +20,10 @@ MonoBehaviour:
   _activeSound: {fileID: 8300000, guid: a4553defcd5499a41a8d65a2db6d6c7c, type: 3}
   _activeSoundVolume: 1
   _activeSoundPitch: 1
-  _baseDamage: 50
-  _damageMagicForceCoefficient: 1
-  _damageGrowth: 30
-  _baseKnockback: 15
+  _baseDamage: 30
+  _damageMagicForceCoefficient: 0.1
+  _damageGrowth: 10
+  _baseKnockback: 10
   _knockbackGrowth: 5
   _baseManaCost: 100
   _manaCostGrowth: 20

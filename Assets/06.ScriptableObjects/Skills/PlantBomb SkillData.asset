@@ -20,10 +20,10 @@ MonoBehaviour:
   _plantSoundVolume: 1
   _plantSoundPitch: 1
   _baseDamage: 120
-  _damageAttackCoefficient: 1
-  _damageGrowth: 50
+  _damageAttackCoefficient: 0.5
+  _damageGrowth: 30
   _baseManaCost: 50
   _manaCostGrowth: 5
-  _baseCooldown: 8
-  _cooldownShrink: 1
-  _minCooldown: 1
+  _baseCooldown: 15
+  _cooldownShrink: 3.5
+  _minCooldown: 5

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d97cd629e376d6446a7930cd52465d24, type: 3}
+  m_Name: Lightning Bolt
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: b19a16fe167e06e4188dba892d60d98c, type: 3}
+  Name: "\uB77C\uC774\uD2B8\uB2DD \uBCFC\uD2B8"
+  DescriptionSummary: "\uC804\uAE30 \uC5D0\uB108\uC9C0\uB97C \uCDA9\uC804\uD558\uC5EC
+    \uB2E4\uC218 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  _prefab: {fileID: 3658406521677521654, guid: 761740336fee0eb45a399e31a6eb1607, type: 3}
+  _compressParticle: {fileID: 522932239490844756, guid: 51a881bf8319b9c4f930dea537d63e23, type: 3}
+  _shootSound: {fileID: 8300000, guid: 93dc7c12ad95402478c79b08aa4abb87, type: 3}
+  _shootSoundVolume: 0.41
+  _shootSoundPitch: 2.78
+  _chargeSound: {fileID: 8300000, guid: 98b5d5c57feb61d4f860046cdfe60889, type: 3}
+  _chargeSoundVolume: 0.5
+  _chargeSoundPitch: 1.99
+  _baseDamage: 17
+  _damageMagicForceCoefficient: 0.06
+  _damageGrowth: 3
+  _baseManaCost: 100
+  _manaCostGrowth: 15
+  _baseCooldown: 5
+  _cooldownShrink: 0.7
+  _minCooldown: 3
+  _baseStunTime: 0.6
+  _stunTimeGrowth: 0.5
+  _maxStunTime: 3
+  _chargeTime: 3
+  _minCount: 3
+  _maxCount: 6
+  _maxCountGrowth: 5
+  _minDamageRate: 0.5

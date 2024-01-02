@@ -6,13 +6,16 @@ using UnityEngine;
 
 public class PlayerHand : MonoBehaviour
 {
+    public Transform HandRotator;
     public SpriteRenderer Renderer;
 
+    [SerializeField] private float _swingHandRotate;
+
     private bool _isSwinging = false;
-    private float _swingTime = 0.5f;
+    private float _swingTime = 0f;
     private float _rotateTarget = 0f;
     private float _resetTimer = 0f;
-    private float _vel = 0f;
+    private float _vel = 0f, _handRotatorVel = 0f;
 
     private void Awake()
     {
@@ -31,12 +34,14 @@ public class PlayerHand : MonoBehaviour
             }
         }
         transform.localEulerAngles = new(0, 0, Mathf.SmoothDampAngle(transform.localEulerAngles.z, _rotateTarget, ref _vel, _swingTime));
+        HandRotator.localEulerAngles = new(0, 0, Mathf.SmoothDampAngle(HandRotator.localEulerAngles.z, 
+            !Mathf.Approximately(_rotateTarget, 0f) ? 0f : _swingHandRotate, ref _handRotatorVel, _swingTime));
     }
 
     public void Swing(float rot, float time)
     {
         if (_isSwinging) return;
-        _resetTimer = 2f;
+        _resetTimer = 1f;
         _isSwinging = true;
         SwingTask(rot, time).Forget();
     }

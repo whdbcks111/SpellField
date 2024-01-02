@@ -17,7 +17,7 @@ MonoBehaviour:
   DescriptionSummary: "\uC5D0\uB108\uC9C0 \uAD6C\uCCB4\uB97C \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
   Description: "\uB9C8\uBC95 \uD53C\uD574\uB97C \uC8FC\uB294 \uC5D0\uB108\uC9C0 \uAD6C\uCCB4\uB97C
     \uBC1C\uC0AC\uD569\uB2C8\uB2E4. "
-  DisplayObject: {fileID: 182028857364932153, guid: 50931a319a6ca6f428073c9b85e3c0b4, type: 3}
+  DisplayObject: {fileID: 242461619625186864, guid: 50931a319a6ca6f428073c9b85e3c0b4, type: 3}
   Cooldown: 0.5
   StatModifiers:
   - _statType: 1

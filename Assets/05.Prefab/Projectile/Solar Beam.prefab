@@ -217,11 +217,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Owner: {fileID: 0}
-  Speed: 5
+  Speed: 7
   Accelerate: -0.5
   PenetrateCount: 1
   LiveTime: 10
   AllowNegativeSpeed: 0
   OnlyTriggerWithPlayer: 0
+  FixedRotation: 0
   MaxLiveTime: 0
   IsTriggerable: 1

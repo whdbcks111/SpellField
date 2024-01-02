@@ -26,8 +26,9 @@ public class ProjectileShooterData : WeaponData
     protected virtual void Shoot(Player p, Weapon weapon)
     {
         SoundManager.Instance.PlaySFX(_activeSound, p.transform.position, _activeSoundVolume, _activeSoundPitch);
-        Projectile.Shoot(() => GetProjectile(p, weapon), p, p.PlayerRenderer.transform.position, 
-            p.PlayerRenderer.transform.eulerAngles.z, 1, 1, 0, 0, 1.2f);
+        Projectile.Shoot(() => GetProjectile(p, weapon), p, 
+            (weapon.Display is ProjectileShooterDisplay psData ? psData.ShootPoint.position : p.PlayerRenderer.transform.position), 
+            p.PlayerRenderer.transform.eulerAngles.z, 1, 1, 0, 0);
     }
 
     protected override void OnUse(Player p, Weapon weapon)

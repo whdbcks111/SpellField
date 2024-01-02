@@ -25,13 +25,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 134811282635231334}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.261, y: 0.25, z: 0}
+  m_LocalRotation: {x: 0, y: -0, z: 0.976296, w: -0.21643949}
+  m_LocalPosition: {x: -0.042, y: -0.171, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2744324901316282319}
   m_Father: {fileID: 5041615225827311007}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 205}
 --- !u!212 &8716206517984994301
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -84,6 +85,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1597838353094064822
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2744324901316282319}
+  m_Layer: 0
+  m_Name: Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2744324901316282319
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597838353094064822}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.286, y: 0.296, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3917639824987634579}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3334253548057696862
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5041615225827311007}
-  - component: {fileID: 182028857364932153}
+  - component: {fileID: 242461619625186864}
   m_Layer: 0
   m_Name: Mage Wand
   m_TagString: Untagged
@@ -117,7 +149,7 @@ Transform:
   - {fileID: 3917639824987634579}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &182028857364932153
+--- !u!114 &242461619625186864
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,7 +158,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 3334253548057696862}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7810d1ac592e847a628cf05d36cf76, type: 3}
+  m_Script: {fileID: 11500000, guid: 66c18584dab9d654f8ad2b42be02b2ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SpriteRenderer: {fileID: 8716206517984994301}
+  ShootPoint: {fileID: 2744324901316282319}

@@ -20,6 +20,8 @@ public class NetworkManager : MonoBehaviour
     private Socket _socket;
     private readonly byte[] _buffer = new byte[1024];
     private readonly StringBuilder _packetBuilder = new();
+    
+    private readonly Dictionary<string, List<Action<string, string>>> _eventListeners = new();
 
     public IClient Client;
     public PingData PingData = new();
@@ -170,6 +172,22 @@ public class NetworkManager : MonoBehaviour
             PingData.RoomState.Remove(key);
         }
     }
+
+    /// <summary>
+    /// Start to listen network event.
+    /// returns : Dispatch Listener Action
+    /// </summary>
+    /// <param name="eventName"></param>
+    /// <param name="listener"></param>
+    private Action Listen(string eventName, Action<string, string> listener)
+    {
+        if(!_eventListeners.ContainsKey(eventName))
+        {
+            _eventListeners[eventName] = new();
+        }
+        _eventListeners[eventName].Add(listener);
+        return () => _eventListeners[eventName].Remove(listener);
+    } 
 
     private void OnEvent(string from, string eventName, string message)
     {

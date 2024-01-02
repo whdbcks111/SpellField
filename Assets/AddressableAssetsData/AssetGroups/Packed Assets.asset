@@ -281,6 +281,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - skills
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c32f9307e1a7f444480cb881d7cf70a2
+    m_Address: Assets/06.ScriptableObjects/Skins/Miku.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skins
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a9d5e87e89ea8d43a3139f9bf97b092
+    m_Address: Assets/06.ScriptableObjects/Skills/Lightning Bolt.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b545a273754a74742940592b152ec63e, type: 2}
   m_SchemaSet:
