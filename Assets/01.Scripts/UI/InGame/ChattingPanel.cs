@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ChattingPanel : MonoBehaviour
 {
@@ -12,20 +13,29 @@ public class ChattingPanel : MonoBehaviour
 
     private float _panelShowTimer = 0f;
     private float _panelHideTimer = 0f;
+    private float _enterSelectCooldown = 0f;
 
     private void Awake()
     {
         _canvasGroup.alpha = _minAlpha;
+        _inputField.onEndEdit.AddListener(_ => SendChat());
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && !_inputField.isFocused)
+        if (Input.GetKeyDown(KeyCode.Return) && _enterSelectCooldown <= 0f)
         {
-            _inputField.selectionStringAnchorPosition = 0;
-            _inputField.text = "";
-            _inputField.Select();
+            if(!_inputField.isFocused)
+            {
+                _inputField.selectionStringAnchorPosition = 0;
+                _inputField.text = "";
+                if(EventSystem.current.currentSelectedGameObject != null)
+                    EventSystem.current.SetSelectedGameObject(null);
+                _inputField.Select();
+                print("Chat Field Select");
+            }
         }
+        
 
         if (_inputField.isFocused) _panelShowTimer = _panelShowTime;
 
@@ -41,14 +51,25 @@ public class ChattingPanel : MonoBehaviour
             _panelHideTimer -= Time.deltaTime * _panelHideSpeed;
             _canvasGroup.alpha = _minAlpha + _panelHideTimer * (1 - _minAlpha);
         }
+
+        if(_enterSelectCooldown > 0f)
+        {
+            _enterSelectCooldown -= Time.deltaTime;
+        }
     }
 
     public void SendChat()
     {
         var text = _inputField.text;
-        if (text.Trim().Length == 0) return;
-        NetworkManager.Instance.SendPacket("all", "chat", $"[{NetworkManager.Instance.PingData.Nickname}] {text.Replace('\0', '\n')}");
+        if (text.Trim().Length > 0)
+        {
+            NetworkManager.Instance.SendPacket("all", "chat",
+                $"[{NetworkManager.Instance.PingData.Nickname}] {text.Replace('\0', '\n')}");
+        }
+        if (EventSystem.current.currentSelectedGameObject != null)
+            EventSystem.current.SetSelectedGameObject(null);
         _inputField.text = "";
+        _enterSelectCooldown = 0.5f;
     }
 
     public void AddChat(string text)

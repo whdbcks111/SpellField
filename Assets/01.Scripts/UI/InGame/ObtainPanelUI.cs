@@ -11,7 +11,7 @@ public class ObtainPanelUI : MonoBehaviour
     public bool IsOpened { get => gameObject.activeSelf || _isOpening; }
 
     private bool _isOpening = false;
-
+     
     public void Close()
     {
         gameObject.SetActive(false);

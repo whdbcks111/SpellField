@@ -8,6 +8,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Lightning Bolt", menuName = "ScriptableObjects/SkillData/LightningBolt", order = 0)]
 public class LightningBoltSkillData : PlayerSkillData
 {
+    public const string RandomKey = "lightning_bolt";
+
     [SerializeField] private DamageProjectile _prefab;
     [SerializeField] private ParticleSystem _compressParticle;
     [SerializeField] private AudioClip _shootSound;
@@ -16,6 +18,8 @@ public class LightningBoltSkillData : PlayerSkillData
     [SerializeField] private AudioClip _chargeSound;
     [SerializeField] private float _chargeSoundVolume = 1f;
     [SerializeField] private float _chargeSoundPitch = 1f;
+
+    [SerializeField] private float _randomShootRange;
 
     [Header("Damage")]
     [SerializeField] private float _baseDamage;
@@ -143,7 +147,7 @@ public class LightningBoltSkillData : PlayerSkillData
         {
             Projectile.Shoot(() => GetProjectile(p, skill), p,
                 p.PlayerRenderer.transform.position,
-                directionZ,
+                directionZ + GameManager.Instance.GetSeedRandomRange(RandomKey, -_randomShootRange, _randomShootRange),
                 1, 1, 0, 0f, 1f);
             SoundManager.Instance.PlaySFX(_shootSound, p.transform.position, _shootSoundVolume, _shootSoundPitch);
             await UniTask.Delay(TimeSpan.FromSeconds(0.05f));

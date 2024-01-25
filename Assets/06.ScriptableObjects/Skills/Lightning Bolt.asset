@@ -24,6 +24,7 @@ MonoBehaviour:
   _chargeSound: {fileID: 8300000, guid: 98b5d5c57feb61d4f860046cdfe60889, type: 3}
   _chargeSoundVolume: 0.5
   _chargeSoundPitch: 1.99
+  _randomShootRange: 3
   _baseDamage: 17
   _damageMagicForceCoefficient: 0.06
   _damageGrowth: 3
