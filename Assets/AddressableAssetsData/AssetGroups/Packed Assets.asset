@@ -293,6 +293,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - skills
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f09b6802520736c4eadc91c961cc5c43
+    m_Address: Assets/06.ScriptableObjects/Skills/Tetoris.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - skills
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b545a273754a74742940592b152ec63e, type: 2}
   m_SchemaSet:

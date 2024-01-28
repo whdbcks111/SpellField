@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class TreasureBox : Structure
 {
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         if (LastAttacker != null && LastAttacker.IsSelf)
         {
             GameManager.Instance.ObtainableCount++;

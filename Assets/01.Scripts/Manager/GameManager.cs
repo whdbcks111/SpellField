@@ -1,14 +1,11 @@
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,9 +16,13 @@ public class GameManager : MonoBehaviour
     public const bool AllowSingleplay = false;
 #endif
 
+    public const string GameTimeOptionKey = "option_gametime";
+    public const string MapRadiusOptionKey = "option_map_radius";
+    public const string ObtainSpanOptionKey = "option_obtain_time";
+
     public const float DefaultGameTime = 8 * 60;
     public const float DefaultMapRadius = 200f;
-    public const float MinAreaRadius = 1f;
+    public const float MinAreaRadius = 5f;
     public const float DefaultObtainSpan = 40f;
 
     public static GameManager Instance { get; private set; }
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Player SelfPlayer = null;
     [HideInInspector] public int Seed;
 
+    [SerializeField] private Player _playerPrefab;
     [SerializeField] private AudioClip _bgm;
     [SerializeField] private TextMeshProUGUI _bounceTextPrefab;
     [SerializeField] private CinemachineVirtualCamera _virtualCam;
@@ -48,6 +50,7 @@ public class GameManager : MonoBehaviour
     private bool _isPlayerSpawned = false;
     private bool _isFinished = false;
 
+    private readonly List<Action> _eventDisposeActions = new();
     private readonly CancellationTokenSource _destroyCancelToken = new();
     private readonly Dictionary<string, System.Random> _seedRandomMap = new();
 
@@ -57,7 +60,8 @@ public class GameManager : MonoBehaviour
     public UIManager UIManager { get => _uiManager; }
     public SafeAreaControl SafeArea { get => _safeArea; }
     public float RemainGameTime { get => _remainGameTime; }
-    public int RemainPlayerCount { 
+    public int RemainPlayerCount
+    {
         get
         {
             int survivalCount = 0;
@@ -66,7 +70,7 @@ public class GameManager : MonoBehaviour
                 if (p.Mode == GameMode.Survival) survivalCount++;
             }
             return survivalCount;
-        } 
+        }
     }
 
     public Player AnyRemainPlayer
@@ -86,9 +90,46 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        _eventDisposeActions.Add(NetworkManager.Instance.On("chat", OnChat));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("spawn-player", OnSpawnPlayer));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("spawn-bounce-text", OnSpawnBounceText));
+    }
+
+    private void OnSpawnBounceText(string from, string message)
+    {
+        string[] splitResult = message.Split(':', 3);
+        if (float.TryParse(splitResult[0], out var x) &&
+           float.TryParse(splitResult[1], out var y))
+        {
+            SpawnBounceText(new(x, y), splitResult[2]);
+        }
+    }
+
+    private void OnSpawnPlayer(string from, string message)
+    {
+        string[] splitResult = message.Split(':', 3);
+        if (float.TryParse(splitResult[1], out float x) && float.TryParse(splitResult[2], out float y))
+        {
+            SpawnPlayer(splitResult[0], new(x, y)).Forget();
+        }
+    }
+
+    private async UniTask SpawnPlayer(string uid, Vector3 pos)
+    {
+        await UniTask.WaitUntil(() => SceneManager.GetActiveScene().name.Equals("GameScene"));
+        Player.SpawnPlayer(_playerPrefab, uid, pos);
+    }
+
+    private void OnChat(string from, string message)
+    {
+        UIManager.ChattingPanel.AddChat(message);
+    }
+
     public System.Random GetSeedRandom(string key)
     {
-        if(!_seedRandomMap.ContainsKey(key)) _seedRandomMap[key] = new(Seed + key.GetHashCode());
+        if (!_seedRandomMap.ContainsKey(key)) _seedRandomMap[key] = new(Seed + key.GetHashCode());
         return _seedRandomMap[key];
     }
 
@@ -102,49 +143,69 @@ public class GameManager : MonoBehaviour
         return GetSeedRandom(key).Next(minInclusive, maxInclusive);
     }
 
-    public void StartGame()
+    private void ApplyRoomOptions()
     {
-        ObtainableCount = 0;
-        _startTime = Time.realtimeSinceStartup;
-
         var roomState = NetworkManager.Instance.PingData.RoomState;
-        if (int.TryParse(roomState.GetValueOrDefault("server_seed", "0"), out int seed)) {
+        if (int.TryParse(roomState.GetValueOrDefault("server_seed", "0"), out int seed))
+        {
             Seed = seed;
         }
 
         _obtainTime = _remainGameTime = _maxGameTime = DefaultGameTime;
 
-        if(roomState.TryGetValue("option_gametime", out string timeStr) 
+        if (roomState.TryGetValue(GameTimeOptionKey, out string timeStr)
             && float.TryParse(timeStr, out float time))
         {
             _obtainTime = _remainGameTime = _maxGameTime = time;
         }
 
         _obtainSpan = DefaultObtainSpan;
-        if (roomState.TryGetValue("option_obtain_time", out string obtainSpanStr)
+        if (roomState.TryGetValue(ObtainSpanOptionKey, out string obtainSpanStr)
             && float.TryParse(obtainSpanStr, out float obtainSpan))
         {
             _obtainSpan = obtainSpan;
         }
 
         _mapRadius = DefaultMapRadius;
+        if (roomState.TryGetValue(MapRadiusOptionKey, out string mapRadiusStr)
+            && float.TryParse(mapRadiusStr, out float mapRadius))
+        {
+            _mapRadius = mapRadius;
+        }
+    }
+
+    public void StartGame()
+    {
+        ObtainableCount = 0;
+        _startTime = Time.realtimeSinceStartup;
+
+        ApplyRoomOptions();
+
         SafeArea.Center = Vector3.zero;
         SafeArea.Radius = _mapRadius;
 
         GenerateStructures();
 
-
         if (NetworkManager.Instance.PingData.IsMasterClient)
         {
             foreach (ClientInfo client in NetworkManager.Instance.PingData.Clients)
             {
-                float angle = UnityEngine.Random.Range(0, 2 * Mathf.PI);
-                Vector2 pos = UnityEngine.Random.Range(0, _mapRadius) * new Vector2(
-                    Mathf.Cos(angle),
-                    Mathf.Sin(angle)
-                    );
+                Vector2 pos;
+                do
+                {
+                    pos = new(UnityEngine.Random.Range(-_mapRadius, _mapRadius),
+                        UnityEngine.Random.Range(-_mapRadius, _mapRadius));
+                }
+                while (pos.magnitude > _mapRadius);
+
                 NetworkManager.Instance.SendPacket("all", "spawn-player",
                     string.Format("{0}:{1:0.000}:{2:0.000}", client.UID, pos.x, pos.y));
+            }
+
+            var clients = NetworkManager.Instance.PingData.Clients;
+            foreach (ClientInfo client in clients)
+            {
+                NetworkManager.Instance.RemoveRoomState("ready__" + client.UID);
             }
         }
 
@@ -160,9 +221,9 @@ public class GameManager : MonoBehaviour
     {
         _remainGameTime = Mathf.Max(0, _maxGameTime - (Time.realtimeSinceStartup - _startTime));
 
-        if(SelfPlayer != null)
+        if (SelfPlayer != null)
         {
-            if(!_isPlayerSpawned)
+            if (!_isPlayerSpawned)
             {
                 _isPlayerSpawned = true;
                 _virtualCam.transform.position = SelfPlayer.transform.position;
@@ -170,9 +231,10 @@ public class GameManager : MonoBehaviour
             _virtualCam.Follow = SelfPlayer.transform;
         }
 
-        SafeArea.CurrentRadius = Mathf.Lerp(MinAreaRadius, _mapRadius, Mathf.Clamp01(_remainGameTime / Mathf.Max(Mathf.Epsilon, _maxGameTime)));
+        SafeArea.CurrentRadius = Mathf.Lerp(MinAreaRadius, _mapRadius, 
+            Mathf.Clamp01(_remainGameTime / Mathf.Max(Mathf.Epsilon, _maxGameTime)));
 
-        if(_remainGameTime < _obtainTime)
+        if (_remainGameTime < _obtainTime)
         {
             _obtainTime -= _obtainSpan;
             foreach (var p in Player.GetPlayers())
@@ -182,14 +244,14 @@ public class GameManager : MonoBehaviour
             ObtainableCount++;
         }
 
-        if(ObtainableCount > 0 && !UIManager.ObtainPanel.IsOpened)
+        if (ObtainableCount > 0 && !UIManager.ObtainPanel.IsOpened)
         {
             ObtainableCount--;
             ShowObtainPanel();
         }
 
         if (!NetworkManager.Instance.PingData.RoomState.ContainsKey("is_single") &&
-            SceneManager.GetActiveScene().name == "GameScene" && 
+            SceneManager.GetActiveScene().name == "GameScene" &&
             Player.GetPlayers().Length >= NetworkManager.Instance.PingData.Clients.Length &&
             RemainPlayerCount <= 1 &&
             !_isFinished)
@@ -204,7 +266,7 @@ public class GameManager : MonoBehaviour
             ShowObtainPanel();
         }
 
-        if(SelfPlayer != null)
+        if (SelfPlayer != null)
         {
             _survivalUI.SetActive(SelfPlayer.Mode == GameMode.Survival);
         }
@@ -225,9 +287,9 @@ public class GameManager : MonoBehaviour
 
     public void ShowDamage(Vector3 pos, DamageParams damageParams)
     {
-        string text = string.Format("{0:0.0}", damageParams.NormalDamage) + 
+        string text = string.Format("{0:0.0}", damageParams.NormalDamage) +
             (damageParams.IsCriticalAttack ?
-                string.Format("<color=#ff4444>(+{0:0.0})</color>", damageParams.CriticalDamage) 
+                string.Format("<color=#ff4444>(+{0:0.0})</color>", damageParams.CriticalDamage)
                 : "");
         NetworkManager.Instance.SendPacket("all", "spawn-bounce-text", string.Format("{0:0.000}:{1:0.000}:{2}", pos.x, pos.y, text));
     }
@@ -245,7 +307,7 @@ public class GameManager : MonoBehaviour
         bounceText.SetText(text);
 
         float yVel = bounceForce;
-        for(float t = 0f; t < time; t += Time.deltaTime)
+        for (float t = 0f; t < time; t += Time.deltaTime)
         {
             await UniTask.Yield(cancellationToken: _destroyCancelToken.Token);
             if (_destroyCancelToken.IsCancellationRequested) return;
@@ -257,6 +319,10 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        foreach (var dispose in _eventDisposeActions)
+        {
+            dispose();
+        }
         _destroyCancelToken.Cancel();
         _destroyCancelToken.Dispose();
     }

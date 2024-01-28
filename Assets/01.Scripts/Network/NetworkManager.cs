@@ -21,9 +21,11 @@ public class NetworkManager : MonoBehaviour
     private readonly byte[] _buffer = new byte[1024];
     private readonly StringBuilder _packetBuilder = new();
     
-    private readonly Dictionary<string, List<Action<string, string>>> _eventListeners = new();
+    private readonly Dictionary<string, List<Action<string, string>>> _eventMap = new();
+    private readonly List<Action<string>> _clientJoinEvents = new();
+    private readonly List<Action<string>> _clientLeaveEvents = new();
+    private readonly List<Action<string>> _clientJoinFailedEvents = new();
 
-    public IClient Client;
     public PingData PingData = new();
     public RoomInfo[] RoomInfos = new RoomInfo[0];
     public bool IsPingDataSetted = false;
@@ -157,11 +159,11 @@ public class NetworkManager : MonoBehaviour
 
     public void SetRoomState(string key, string value)
     {
-        if (IsPingDataSetted && PingData.IsMasterClient)
-        {
-            SendPacket("server", "set-room-state", key + ":" + value);
-            PingData.RoomState[key] = value;
-        }
+        if (!IsPingDataSetted) throw new Exception("Ping data is not setted.");
+        if (!PingData.IsMasterClient) throw new Exception("Set room state in guest client.");
+        
+        SendPacket("server", "set-room-state", key + ":" + value);
+        PingData.RoomState[key] = value;
     }
 
     public void RemoveRoomState(string key)
@@ -173,21 +175,36 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Start to listen network event.
-    /// returns : Dispatch Listener Action
-    /// </summary>
-    /// <param name="eventName"></param>
-    /// <param name="listener"></param>
-    private Action Listen(string eventName, Action<string, string> listener)
+    public Action On(string eventName, Action<string, string> listener)
     {
-        if(!_eventListeners.ContainsKey(eventName))
+        if (!_eventMap.ContainsKey(eventName))
         {
-            _eventListeners[eventName] = new();
+            _eventMap[eventName] = new();
         }
-        _eventListeners[eventName].Add(listener);
-        return () => _eventListeners[eventName].Remove(listener);
-    } 
+        Action<string, string> wrapper = (from, message) => listener(from, message);
+        _eventMap[eventName].Add(wrapper);
+        return () => {
+            _eventMap[eventName].Remove(wrapper);
+            };
+    }
+
+    public Action OnJoinClient(Action<string> listener)
+    {
+        _clientJoinEvents.Add(listener);
+        return () => _clientJoinEvents.Remove(listener);
+    }
+
+    public Action OnJoinFailedClient(Action<string> listener)
+    {
+        _clientJoinFailedEvents.Add(listener);
+        return () => _clientJoinFailedEvents.Remove(listener);
+    }
+
+    public Action OnLeaveClient(Action<string> listener)
+    {
+        _clientLeaveEvents.Add(listener);
+        return () => _clientLeaveEvents.Remove(listener);
+    }
 
     private void OnEvent(string from, string eventName, string message)
     {
@@ -249,19 +266,34 @@ public class NetworkManager : MonoBehaviour
                     IsPingDataSetted = true;
                     break;
                 case "join-client":
-                    Client.OnJoinClient(message);
+                    foreach (var joinEvent in _clientJoinEvents)
+                    {
+                        joinEvent(message);
+                    }
                     break;
                 case "join-room-failed":
-                    Client.OnJoinFailed(message);
+                    foreach (var joinFailedEvent in _clientJoinFailedEvents)
+                    {
+                        joinFailedEvent(message);
+                    }
                     break;
                 case "leave-client":
-                    Client.OnLeaveClient(message);
+                    foreach (var leaveEvent in _clientLeaveEvents)
+                    {
+                        leaveEvent(message);
+                    }
                     break;
             }
         }
         else
         {
-            Client.OnEvent(from, eventName, message);
+            if(_eventMap.ContainsKey(eventName))
+            {
+                foreach(var action in _eventMap[eventName])
+                {
+                    action(from, message);
+                }
+            }
         }
     }
 

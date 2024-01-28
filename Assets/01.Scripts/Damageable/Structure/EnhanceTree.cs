@@ -6,8 +6,9 @@ public class EnhanceTree : Structure
 {
     [SerializeField] private float _time;
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         if (LastAttacker != null)
         {
             LastAttacker.AddEffect(new Effect(EffectType.Enhance, 1, _time, LastAttacker));

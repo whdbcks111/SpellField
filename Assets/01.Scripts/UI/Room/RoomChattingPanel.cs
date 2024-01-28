@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,14 +7,23 @@ using UnityEngine;
 
 public class RoomChattingPanel : MonoBehaviour
 {
-    public static RoomChattingPanel Instance { get; private set; }
 
     [SerializeField] private TextMeshProUGUI _chatText;
     [SerializeField] private TMP_InputField _inputField;
 
-    private void Awake()
+    private Action _chatEventDispose;
+
+    private void Start()
     {
-        Instance = this;
+        _chatEventDispose = NetworkManager.Instance.On("room-chat", (from, message) =>
+        {
+            AddChat(message);
+        });
+    }
+
+    private void OnDestroy()
+    {
+        _chatEventDispose();
     }
 
     public void SendChat()

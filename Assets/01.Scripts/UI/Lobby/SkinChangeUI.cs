@@ -18,9 +18,9 @@ public class SkinChangeUI : MonoBehaviour
     {
         _skinDatas = await PlayerSkinDatabase.GetAllData();
 
-        if(PlayerPrefs.HasKey("skin"))
+        if(PlayerPrefs.HasKey(PlayerSkinDatabase.LocalSkinDataKey))
         {
-            var skinName = PlayerPrefs.GetString("skin", "");
+            var skinName = PlayerPrefs.GetString(PlayerSkinDatabase.LocalSkinDataKey, "");
             bool flag = false;
             for(int i = 0; i < _skinDatas.Length; i++)
             {
@@ -63,7 +63,7 @@ public class SkinChangeUI : MonoBehaviour
 
         _skinImage.sprite = _skinDatas[_curIndex].PlayerSprite;
         _skinNameText.SetText(_skinDatas[_curIndex].Name);
-        PlayerPrefs.SetString("skin", _skinDatas[_curIndex].Name);
+        PlayerPrefs.SetString(PlayerSkinDatabase.LocalSkinDataKey, _skinDatas[_curIndex].Name);
     }
 
     public void AddSkinIndex(int amount)

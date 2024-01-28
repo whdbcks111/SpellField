@@ -54,7 +54,7 @@ public class SafeAreaControl : MonoBehaviour
 
         transform.position = Vector3.SmoothDamp(transform.position, Center, ref _moveVel, 0.5f, 100f, Time.fixedDeltaTime);
 
-        var vertexCount = Mathf.Max((int)(CurrentRadius * 2f * Mathf.PI * 4f), 100);
+        int vertexCount = Mathf.Clamp((int)(CurrentRadius * 2f * Mathf.PI * 4f), 100, 360);
         _lineRenderer.positionCount = vertexCount;
 
         float angle;

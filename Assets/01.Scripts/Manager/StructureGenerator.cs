@@ -103,11 +103,5 @@ public class StructureGenerator : MonoBehaviour
                 Structure.SpawnStructure(_grassStructure, pos + new Vector2(RandomRange(-8f, 8f), RandomRange(-7f, 5f)));
             }
         }
-
-
-        foreach (var player in Player.GetPlayers())
-        {
-            player.RemoveNearStructures();
-        }
     }
 }

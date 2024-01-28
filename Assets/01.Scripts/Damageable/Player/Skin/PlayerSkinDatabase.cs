@@ -9,6 +9,7 @@ using UnityEngine.U2D;
 
 public static class PlayerSkinDatabase
 {
+    public const string LocalSkinDataKey = "skin";
     private static Dictionary<string, SkinData> dataMap = null;
 
     private static async UniTask LoadAllData()

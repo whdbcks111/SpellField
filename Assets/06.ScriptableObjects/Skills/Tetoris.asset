@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a93976d4e1675140ad0dcc02a722401, type: 3}
+  m_Name: Tetoris
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 3056bf7d5e76339499a711595404b393, type: 3}
+  Name: "\uD14C\uD1A0\uB9AC\uC2A4"
+  DescriptionSummary: "\uD14C\uD2B8\uB9AC\uC2A4\uB97C \uBC1C\uC0AC\uD558\uC5EC \uD50C\uB808\uC774\uC5B4\uB97C
+    \uB04C\uC5B4\uB2F9\uAE41\uB2C8\uB2E4."
+  _prefabs:
+  - {fileID: 3658406521677521654, guid: f455d6a589668f14b9f31565f6cf3a8e, type: 3}
+  - {fileID: 3658406521677521654, guid: ae6f6bdc4667aa64f9ea9faeb465b5d3, type: 3}
+  - {fileID: 3658406521677521654, guid: 3a05aea9793eda844a5a13daa4f0a2d9, type: 3}
+  - {fileID: 3658406521677521654, guid: 9cf389fc30eba66499666cfecd0a6137, type: 3}
+  - {fileID: 3658406521677521654, guid: 049f2c5ad698ec84c95dede38d1f4ad8, type: 3}
+  - {fileID: 3658406521677521654, guid: c71c4772a81b1c543aae186ab5631f21, type: 3}
+  - {fileID: 3658406521677521654, guid: bb51f02b0f777f54682ce0702263628e, type: 3}
+  _shootSound: {fileID: 8300000, guid: 84b60ae97c8a2944da2f825c6688b075, type: 3}
+  _shootVolume: 1
+  _shootPitch: 1
+  _baseDamage: 60
+  _damageAttackCoefficient: 0.2
+  _damageGrowth: 20
+  _baseManaCost: 50
+  _manaCostGrowth: 3
+  _baseCooldown: 1
+  _cooldownShrink: 0.2
+  _minCooldown: 0.2
+  _grabForce: 10
+  _hpRegenAddition: 5

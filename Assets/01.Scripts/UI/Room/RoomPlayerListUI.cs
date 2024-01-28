@@ -8,7 +8,7 @@ public class RoomPlayerListUI : MonoBehaviour
 {
 
     [SerializeField] private RoomPlayerInfoUI _playerInfoPrefab;
-    [SerializeField] private Button _startButton, _readyButton, _singlePlayButton;
+    [SerializeField] private Button _startButton, _readyButton, _singlePlayButton, _optionsButton;
 
     private ScrollRect _scrollRect;
 
@@ -45,25 +45,24 @@ public class RoomPlayerListUI : MonoBehaviour
             }
         }
 
-        bool startBtnActive = NetworkManager.Instance.PingData.IsMasterClient && clients.Length > 1;
-        if (startBtnActive)
+        bool isMasterClient = NetworkManager.Instance.PingData.IsMasterClient;
+        bool canStartGame = false;
+        if (isMasterClient && clients.Length > 1)
         {
-            bool isFirst = true;
+            canStartGame = true;
             foreach (ClientInfo client in clients)
             {
-                if (isFirst)
-                {
-                    isFirst = false;
-                    continue;
-                }
+                if (client.UID == NetworkManager.Instance.PingData.UID) continue;
                 if (!NetworkManager.Instance.PingData.RoomState.ContainsKey("ready__" + client.UID))
                 {
-                    startBtnActive = false;
+                    canStartGame = false;
                     break;
                 }
             }
         }
-        _startButton.gameObject.SetActive(startBtnActive);
+        _optionsButton.gameObject.SetActive(isMasterClient);
+        _startButton.gameObject.SetActive(isMasterClient);
+        _startButton.interactable = canStartGame;
 
         _readyButton.gameObject.SetActive(clients.Length > 0 && !NetworkManager.Instance.PingData.IsMasterClient);
 
@@ -77,15 +76,9 @@ public class RoomPlayerListUI : MonoBehaviour
 
     public void StartGame()
     {
-        var clients = NetworkManager.Instance.PingData.Clients;
         NetworkManager.Instance.SetRoomState("is_started", "");
         NetworkManager.Instance.SetRoomState("server_seed", Random.Range(int.MinValue, int.MaxValue).ToString());
         NetworkManager.Instance.SendPacket("all", "start-game", "");
-
-        foreach (ClientInfo client in clients)
-        {
-            NetworkManager.Instance.RemoveRoomState("ready__" + client.UID);
-        }
     }
 
     public void StartSingleGame()

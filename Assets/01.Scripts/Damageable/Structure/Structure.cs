@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,8 @@ public class Structure : Damageable
 
     private float _beforeHp = 0f;
     private float _sendSyncPacketTimer = 0f;
+
+    private readonly List<Action> _eventDisposeActions = new();
 
     public int StructureId;
 
@@ -44,8 +47,51 @@ public class Structure : Damageable
         StructureMap[StructureId] = this;
     }
 
-    private void OnDestroy()
+    protected override void Start()
     {
+        base.Start();
+
+        _eventDisposeActions.Add(NetworkManager.Instance.On("structure-set-hp", OnSetHPEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("structure-death", OnDeathEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("damage-structure", OnDamageEvent));
+    }
+
+    private void OnDamageEvent(string from, string message)
+    {
+        string[] splitResult = message.Split(':', 3);
+        if (int.TryParse(splitResult[0], out var id) &&
+            StructureId == id &&
+            float.TryParse(splitResult[1], out var amount) &&
+            Player.PlayerMap.TryGetValue(splitResult[2], out var attacker))
+        {
+            Damage(amount, attacker, true);
+        }
+    }
+
+    private void OnSetHPEvent(string from, string message)
+    {
+        string[] splitResult = message.Split(':', 2);
+        if (int.TryParse(splitResult[0], out var id) && StructureId == id &&
+            float.TryParse(splitResult[1], out var value))
+        {
+            SyncHP(value);
+        }
+    }
+
+    private void OnDeathEvent(string from, string message)
+    {
+        if (int.TryParse(message, out var id) && StructureId == id)
+        {
+            OnDeath();
+        }
+    }
+
+    protected virtual void OnDestroy()
+    {
+        foreach (var dispose in _eventDisposeActions)
+        {
+            dispose();
+        }
         StructureMap.Remove(StructureId);
     }
 

@@ -98,6 +98,8 @@ public class Player : Damageable
 
     private readonly List<Effect> _effects = new();
 
+    private readonly List<Action> _eventDisposeActions = new();
+
     public GameMode Mode = GameMode.Survival;
 
     public static void SpawnPlayer(Player prefab, string id, Vector3 pos)
@@ -127,12 +129,10 @@ public class Player : Damageable
     private async UniTask InitSkin()
     {
         await UniTask.WaitUntil(() => ClientInfo.UID?.Length > 0);
-        if (IsSelf && PlayerPrefs.HasKey("skin"))
+        if (NetworkManager.Instance.PingData.RoomState.TryGetValue(
+            NetworkClient.GetPlayerSkinStateKey(ClientInfo.UID), out var skinName))
         {
-            var skinName = PlayerPrefs.GetString("skin", "");
             SetSkin(skinName).Forget();
-
-
         }
     }
 
@@ -229,11 +229,6 @@ public class Player : Damageable
         base.AddShield(amount, time);
     }
 
-    private void OnDestroy()
-    {
-        PlayerMap.Remove(ClientInfo.UID);
-    }
-
     protected override void Start()
     {
         base.Start();
@@ -254,17 +249,179 @@ public class Player : Damageable
             hpBar.HpColor = Color.red;
         }
 
-        RemoveNearStructures();
+        _eventDisposeActions.Add(NetworkManager.Instance.On("move-player", OnMoveEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("player-death", OnDeathEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("rotate-player", OnRotateEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("player-set-hp", OnSetHPEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("player-set-mana", OnSetManaEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("active-skill", OnActiveSkillEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("add-effect", OnAddEffectEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("add-shield", OnAddShieldEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("damage-player", OnDamageEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("start-charge-skill", OnStartChargeSkillEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("use-weapon", OnUseWeaponEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("change-weapon", OnChangeWeaponEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("change-skill", OnChangeSkillEvent));
     }
 
-    public void RemoveNearStructures()
+    private void OnChangeWeaponEvent(string from, string message)
     {
-        foreach(var collider in Physics2D.OverlapCircleAll(transform.position, 10f))
+        if (from != ClientInfo.UID) return;
+
+        ChangeWeapon(message).Forget();
+    }
+
+    private void OnChangeSkillEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        string[] splitResult = message.Split(':', 3);
+        if (int.TryParse(splitResult[0], out var idx) &&
+            int.TryParse(splitResult[2], out var level))
         {
-            if(collider.TryGetComponent(out Structure structure))
-            {
-                Destroy(structure.gameObject);
-            }
+            ChangeSkill(idx, splitResult[1], level).Forget();
+        }
+    }
+
+    private async UniTask ChangeSkill(int index, string skillName, int level)
+    {
+        PlayerSkillData data = await PlayerSkillDatabase.GetSkill(skillName);
+        if (data != null)
+        {
+            SetSkill(Mathf.Clamp(index, 0, SkillLength - 1), new PlayerSkill(data, level));
+        }
+    }
+
+    private void OnUseWeaponEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        MountedWeapon?.Use(this);
+    }
+
+    private async UniTask ChangeWeapon(string weaponName)
+    {
+        WeaponData data = await WeaponDatabase.GetWeapon(weaponName);
+        if (data != null) MountedWeapon = new Weapon(data);
+    }
+
+    private void OnStartChargeSkillEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        foreach (var skill in GetSkills())
+        {
+            if (skill is not null && skill.Data.Name.Equals(message)) 
+                skill.StartCharge(this);
+        }
+    }
+
+    private void OnDamageEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        string[] splitResult = message.Split(':', 2);
+        if (float.TryParse(splitResult[0], out var amount) &&
+            PlayerMap.TryGetValue(splitResult[1], out var attacker))
+        {
+            Damage(amount, attacker, true);
+        }
+    }
+
+    private void OnAddEffectEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        string[] splitResult = message.Split(':', 4);
+        var effType = EffectType.GetByName(splitResult[0]);
+        if (effType != null &&
+            int.TryParse(splitResult[1], out var level) &&
+            float.TryParse(splitResult[2], out var duration))
+        {
+            PlayerMap.TryGetValue(splitResult[3], out Player caster);
+            AddEffect(new(effType, level, duration, caster), true);
+        }
+    }
+
+    private void OnAddShieldEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        string[] splitResult = message.Split(':', 2);
+        if (float.TryParse(splitResult[0], out var amount) &&
+            float.TryParse(splitResult[1], out var time))
+        {
+            AddShield(amount, time, true);
+        }
+    }
+
+    private void OnActiveSkillEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        foreach (var skill in GetSkills())
+        {
+            if (skill is not null && skill.Data.Name.Equals(message)) skill.Active(this);
+        }
+    }
+
+    private void OnMoveEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        string[] splitResult = message.Split(':', 2);
+        if (float.TryParse(splitResult[0], out float x) &&
+            float.TryParse(splitResult[1], out float y))
+        {
+            _smoothPos = new(x, y);
+        }
+    }
+
+    private void OnSetHPEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        if (float.TryParse(message, out var value))
+        {
+            SyncHP(value);
+        }
+    }
+
+    private void OnSetManaEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        if (float.TryParse(message, out var value))
+        {
+            SyncMana(value);
+        }
+    }
+
+    private void OnRotateEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        if (float.TryParse(message, out float z))
+        {
+            OnRotate(z);
+        }
+
+    }
+
+    private void OnDeathEvent(string from, string message)
+    {
+        if (from != ClientInfo.UID) return;
+
+        OnDeath();
+    }
+
+    private void OnDestroy()
+    {
+        PlayerMap.Remove(ClientInfo.UID);
+
+        foreach (var dispose in _eventDisposeActions)
+        {
+            dispose();
         }
     }
 
@@ -428,8 +585,6 @@ public class Player : Damageable
     {
         PlayerRenderer.sprite = data.PlayerSprite;
         Hand.Renderer.sprite = data.HandSprite;
-
-        if (IsSelf) NetworkManager.Instance.SendPacket("others", "set-skin", data.Name);
     }
 
     private void UpdateVisible()
@@ -597,11 +752,6 @@ public class Player : Damageable
         var angles = _playerRenderer.transform.rotation.eulerAngles;
         angles.z = Mathf.MoveTowardsAngle(angles.z, _smoothRotZ, 360 * Time.deltaTime * 2);
         _playerRenderer.transform.rotation = Quaternion.Euler(angles);
-    }
-
-    public void OnMove(Vector3 target)
-    {
-        _smoothPos = target;
     }
 
     public void OnRotate(float z)

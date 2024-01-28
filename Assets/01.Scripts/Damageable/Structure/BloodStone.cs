@@ -6,8 +6,9 @@ public class BloodStone : Structure
 {
     [SerializeField] private float _hpGrowth;
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         if (LastAttacker != null)
         {
             LastAttacker.Stat.SetBase(StatType.MaxHP, LastAttacker.Stat.GetBase(StatType.MaxHP) + _hpGrowth);

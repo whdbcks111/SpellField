@@ -40,11 +40,16 @@ public class ObtainPanelUI : MonoBehaviour
         var weapons = await WeaponDatabase.GetAllData();
         List<ObtainableObject> obtainables = new();
 
-        foreach (var skillData in skills)
+
+        if (GameManager.Instance.SelfPlayer.MountedWeapon != null)
         {
-            if(alreadyOwnedSkills.Contains(skillData)) continue;
-            obtainables.Add(skillData);
+            foreach (var skillData in skills)
+            {
+                if(alreadyOwnedSkills.Contains(skillData)) continue;
+                obtainables.Add(skillData);
+            }
         }
+            
         foreach (var weaponData in weapons)
         {
             if (weaponData == GameManager.Instance.SelfPlayer.MountedWeapon?.Data) continue;

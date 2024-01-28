@@ -37,7 +37,6 @@ public class ServerStatDisplay : MonoBehaviour
         
         if(!_isInGame)
         {
-            statText += $"닉네임 <color=#aaa>{pingData.Nickname}</color>\n";
             if (NetworkManager.Instance.IsInRoom)
             {
                 statText += $"방ID {pingData.RoomID}\n" +

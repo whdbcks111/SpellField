@@ -29,11 +29,11 @@ MonoBehaviour:
     Value: 60
   - _statType: 12
     ModifyType: 0
-    Value: 20
+    Value: 16
   _projectilePrefab: {fileID: 3658406521677521654, guid: 64e71e83b0bfc2845a0a460f70e3a0f5, type: 3}
   _isMagicAttack: 1
   _baseDamage: 5
-  _statMultiply: 0.2
+  _statMultiply: 0.15
   _activeSound: {fileID: 8300000, guid: ca7a861bc54dc7643acd076d94cd6a7a, type: 3}
   _activeSoundVolume: 0.27
   _activeSoundPitch: 1.82

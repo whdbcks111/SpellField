@@ -31,6 +31,7 @@
     <type fullname="SkinData" preserve="all" />
     <type fullname="SpellBladeSkillData" preserve="all" />
     <type fullname="StealthSkillData" preserve="all" />
+    <type fullname="TetorisSkillData" preserve="all" />
     <type fullname="TornadoSkillData" preserve="all" />
     <type fullname="WeaponDisplay" preserve="all" />
     <type fullname="StatModifier" preserve="nothing" serialized="true" />
