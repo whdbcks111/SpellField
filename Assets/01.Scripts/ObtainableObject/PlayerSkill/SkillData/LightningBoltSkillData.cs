@@ -148,7 +148,7 @@ public class LightningBoltSkillData : PlayerSkillData
             Projectile.Shoot(() => GetProjectile(p, skill), p,
                 p.PlayerRenderer.transform.position,
                 directionZ + GameManager.Instance.GetSeedRandomRange(RandomKey, -_randomShootRange, _randomShootRange),
-                1, 1, 0, 0f, 1f);
+                1, 0, 1f);
             SoundManager.Instance.PlaySFX(_shootSound, p.transform.position, _shootSoundVolume, _shootSoundPitch);
             await UniTask.Delay(TimeSpan.FromSeconds(0.05f));
         }

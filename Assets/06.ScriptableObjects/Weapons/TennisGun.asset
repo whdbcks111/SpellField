@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f20c4b595264cb44b598a783e6edde0, type: 3}
+  m_Name: TennisGun
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: d895b969a32df1745988b3cdd523a2a2, type: 3}
+  Name: "\uD14C\uB2C8\uC2A4 \uAC74"
+  DescriptionSummary: "\uB2FF\uC73C\uBA74 \uD295\uAE30\uB294 \uD14C\uB2C8\uC2A4 \uACF5\uC744
+    \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  Description: "\uB2FF\uC73C\uBA74 \uBC18\uB300\uB85C \uD295\uAE30\uB294 \uD14C\uB2C8\uC2A4
+    \uACF5\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. \uB2FF\uC744 \uC2DC \uB300\uC0C1\uC5D0\uAC8C
+    \uBB3C\uB9AC \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
+  DisplayObject: {fileID: 5502633167912389534, guid: afe02df40e25f3845931d9b5e59c03be, type: 3}
+  Cooldown: 1.7
+  StatModifiers:
+  - _statType: 1
+    ModifyType: 1
+    Value: 1.2
+  - _statType: 12
+    ModifyType: 0
+    Value: 5
+  - _statType: 3
+    ModifyType: 0
+    Value: 10
+  _projectilePrefab: {fileID: 4783018341602425951, guid: 3140423401e687e499b738d0a1b00ab6, type: 3}
+  _isMagicAttack: 0
+  _baseDamage: 15
+  _statMultiply: 0.2
+  _shootCount: 2
+  _angleCount: 2
+  _angleSpan: 10
+  _shootTimeSpan: 0.3
+  _activeSound: {fileID: 8300000, guid: 7f2f78482bb2c1d40a6d068035ccca2b, type: 3}
+  _activeSoundVolume: 1
+  _activeSoundPitch: 1.35

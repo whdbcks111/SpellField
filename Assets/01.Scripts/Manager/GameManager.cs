@@ -93,27 +93,17 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _eventDisposeActions.Add(NetworkManager.Instance.On("chat", OnChat));
-        _eventDisposeActions.Add(NetworkManager.Instance.On("spawn-player", OnSpawnPlayer));
         _eventDisposeActions.Add(NetworkManager.Instance.On("spawn-bounce-text", OnSpawnBounceText));
     }
 
-    private void OnSpawnBounceText(string from, string message)
+    private void OnSpawnBounceText(string from, Packet packet)
     {
-        string[] splitResult = message.Split(':', 3);
-        if (float.TryParse(splitResult[0], out var x) &&
-           float.TryParse(splitResult[1], out var y))
-        {
-            SpawnBounceText(new(x, y), splitResult[2]);
-        }
+        SpawnBounceText(packet.NextVector2(), packet.NextString());
     }
 
-    private void OnSpawnPlayer(string from, string message)
+    public void OnSpawnPlayer(string _, Packet packet)
     {
-        string[] splitResult = message.Split(':', 3);
-        if (float.TryParse(splitResult[1], out float x) && float.TryParse(splitResult[2], out float y))
-        {
-            SpawnPlayer(splitResult[0], new(x, y)).Forget();
-        }
+        SpawnPlayer(packet.NextString(), packet.NextVector2()).Forget();
     }
 
     private async UniTask SpawnPlayer(string uid, Vector3 pos)
@@ -122,9 +112,9 @@ public class GameManager : MonoBehaviour
         Player.SpawnPlayer(_playerPrefab, uid, pos);
     }
 
-    private void OnChat(string from, string message)
+    private void OnChat(string _, Packet packet)
     {
-        UIManager.ChattingPanel.AddChat(message);
+        UIManager.ChattingPanel.AddChat(packet.NextString());
     }
 
     public System.Random GetSeedRandom(string key)
@@ -199,7 +189,7 @@ public class GameManager : MonoBehaviour
                 while (pos.magnitude > _mapRadius);
 
                 NetworkManager.Instance.SendPacket("all", "spawn-player",
-                    string.Format("{0}:{1:0.000}:{2:0.000}", client.UID, pos.x, pos.y));
+                    new(client.UID, pos));
             }
 
             var clients = NetworkManager.Instance.PingData.Clients;
@@ -291,7 +281,7 @@ public class GameManager : MonoBehaviour
             (damageParams.IsCriticalAttack ?
                 string.Format("<color=#ff4444>(+{0:0.0})</color>", damageParams.CriticalDamage)
                 : "");
-        NetworkManager.Instance.SendPacket("all", "spawn-bounce-text", string.Format("{0:0.000}:{1:0.000}:{2}", pos.x, pos.y, text));
+        NetworkManager.Instance.SendPacket("all", "spawn-bounce-text", new((Vector2)pos, text));
     }
 
     public void SpawnBounceText(Vector3 pos, string text)

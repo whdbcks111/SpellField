@@ -30,6 +30,7 @@ public class NetworkClient : MonoBehaviour
         _eventDisposeActions.Add(NetworkManager.Instance.OnJoinClient(OnJoinClient));
         _eventDisposeActions.Add(NetworkManager.Instance.OnJoinFailedClient(OnJoinFailed));
         _eventDisposeActions.Add(NetworkManager.Instance.OnLeaveClient(OnLeaveClient));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("spawn-player", OnSpawnPlayer));
         _eventDisposeActions.Add(NetworkManager.Instance.On("set-skin", OnSetSkin));
     }
 
@@ -41,15 +42,26 @@ public class NetworkClient : MonoBehaviour
         }
     }
 
+    private void OnSpawnPlayer(string from, Packet packet)
+    {
+        OnSpawnPlayerTask(from, packet).Forget();
+    }
+
+    private async UniTask OnSpawnPlayerTask(string from, Packet packet)
+    {
+        await UniTask.WaitUntil(() => GameManager.Instance != null);
+        GameManager.Instance.OnSpawnPlayer(from, packet);
+    }
+
     public static string GetPlayerSkinStateKey(string uid)
     {
         return "skin__" + uid;
     }
 
-    public void OnSetSkin(string from, string message)
+    public void OnSetSkin(string from, Packet packet)
     {
         if(NetworkManager.Instance.PingData.IsMasterClient)
-            NetworkManager.Instance.SetRoomState(GetPlayerSkinStateKey(from), message);
+            NetworkManager.Instance.SetRoomState(GetPlayerSkinStateKey(from), packet.NextString());
     }
 
 
@@ -59,7 +71,7 @@ public class NetworkClient : MonoBehaviour
         {
             SceneManager.LoadScene("RoomScene");
             NetworkManager.Instance.SendPacket("master", "set-skin", 
-                PlayerPrefs.GetString(PlayerSkinDatabase.LocalSkinDataKey, ""));
+                new(PlayerPrefs.GetString(PlayerSkinDatabase.LocalSkinDataKey, "")));
         }
         if(NetworkManager.Instance.PingData.IsMasterClient && 
             NetworkManager.Instance.PingData.RoomState.ContainsKey("is_started"))

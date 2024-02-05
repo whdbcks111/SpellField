@@ -299,6 +299,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - skills
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7724bcd567107b045851faad4194c192
+    m_Address: Assets/06.ScriptableObjects/Weapons/TennisGun.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b545a273754a74742940592b152ec63e, type: 2}
   m_SchemaSet:

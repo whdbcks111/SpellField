@@ -221,8 +221,7 @@ public class Player : Damageable
         {
             if (IsSelf)
             {
-                NetworkManager.Instance.SendPacket("others", "add-shield",
-                    $"{amount:0.0}:{time:0.0}");
+                NetworkManager.Instance.SendPacket("others", "add-shield", new(amount, time));
             }
             else return;
         }
@@ -264,23 +263,22 @@ public class Player : Damageable
         _eventDisposeActions.Add(NetworkManager.Instance.On("change-skill", OnChangeSkillEvent));
     }
 
-    private void OnChangeWeaponEvent(string from, string message)
+    private void OnChangeWeaponEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
 
-        ChangeWeapon(message).Forget();
+        ChangeWeapon(packet.NextString()).Forget();
     }
 
-    private void OnChangeSkillEvent(string from, string message)
+    private void OnChangeSkillEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
 
-        string[] splitResult = message.Split(':', 3);
-        if (int.TryParse(splitResult[0], out var idx) &&
-            int.TryParse(splitResult[2], out var level))
-        {
-            ChangeSkill(idx, splitResult[1], level).Forget();
-        }
+        var idx = packet.NextInt();
+        var skillName = packet.NextString();
+        var level = packet.NextInt();
+
+        ChangeSkill(idx, skillName, level).Forget();
     }
 
     private async UniTask ChangeSkill(int index, string skillName, int level)
@@ -292,7 +290,7 @@ public class Player : Damageable
         }
     }
 
-    private void OnUseWeaponEvent(string from, string message)
+    private void OnUseWeaponEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
 
@@ -305,9 +303,10 @@ public class Player : Damageable
         if (data != null) MountedWeapon = new Weapon(data);
     }
 
-    private void OnStartChargeSkillEvent(string from, string message)
+    private void OnStartChargeSkillEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
+        var message = packet.NextString();
 
         foreach (var skill in GetSkills())
         {
@@ -316,99 +315,85 @@ public class Player : Damageable
         }
     }
 
-    private void OnDamageEvent(string from, string message)
+    private void OnDamageEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
+        var amount = packet.NextFloat();
+        var attackerId = packet.NextString();
 
-        string[] splitResult = message.Split(':', 2);
-        if (float.TryParse(splitResult[0], out var amount) &&
-            PlayerMap.TryGetValue(splitResult[1], out var attacker))
+        if (PlayerMap.TryGetValue(attackerId, out var attacker))
         {
             Damage(amount, attacker, true);
         }
     }
 
-    private void OnAddEffectEvent(string from, string message)
+    private void OnAddEffectEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
+        var effTypeName = packet.NextString();
+        var effType = EffectType.GetByName(effTypeName);
+        var level = packet.NextInt();
+        var duration = packet.NextFloat();
+        var casterId = packet.NextString();
 
-        string[] splitResult = message.Split(':', 4);
-        var effType = EffectType.GetByName(splitResult[0]);
-        if (effType != null &&
-            int.TryParse(splitResult[1], out var level) &&
-            float.TryParse(splitResult[2], out var duration))
+        if (effType != null)
         {
-            PlayerMap.TryGetValue(splitResult[3], out Player caster);
+            PlayerMap.TryGetValue(casterId, out Player caster);
             AddEffect(new(effType, level, duration, caster), true);
         }
     }
 
-    private void OnAddShieldEvent(string from, string message)
+    private void OnAddShieldEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
 
-        string[] splitResult = message.Split(':', 2);
-        if (float.TryParse(splitResult[0], out var amount) &&
-            float.TryParse(splitResult[1], out var time))
-        {
-            AddShield(amount, time, true);
-        }
+        var amount = packet.NextFloat();
+        var time = packet.NextFloat();
+
+        AddShield(amount, time, true);
     }
 
-    private void OnActiveSkillEvent(string from, string message)
+    private void OnActiveSkillEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
+        var skillName = packet.NextString();
 
         foreach (var skill in GetSkills())
         {
-            if (skill is not null && skill.Data.Name.Equals(message)) skill.Active(this);
+            if (skill is not null && skill.Data.Name.Equals(skillName)) skill.Active(this);
         }
     }
 
-    private void OnMoveEvent(string from, string message)
+    private void OnMoveEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
 
-        string[] splitResult = message.Split(':', 2);
-        if (float.TryParse(splitResult[0], out float x) &&
-            float.TryParse(splitResult[1], out float y))
-        {
-            _smoothPos = new(x, y);
-        }
+        _smoothPos = packet.NextVector2();
     }
 
-    private void OnSetHPEvent(string from, string message)
+    private void OnSetHPEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
 
-        if (float.TryParse(message, out var value))
-        {
-            SyncHP(value);
-        }
+        SyncHP(packet.NextFloat());
     }
 
-    private void OnSetManaEvent(string from, string message)
+    private void OnSetManaEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
 
-        if (float.TryParse(message, out var value))
-        {
-            SyncMana(value);
-        }
+        SyncMana(packet.NextFloat());
     }
 
-    private void OnRotateEvent(string from, string message)
+    private void OnRotateEvent(string from, Packet packet)
     {
         if (from != ClientInfo.UID) return;
 
-        if (float.TryParse(message, out float z))
-        {
-            OnRotate(z);
-        }
+        OnRotate(packet.NextFloat());
 
     }
 
-    private void OnDeathEvent(string from, string message)
+    private void OnDeathEvent(string from, Packet _)
     {
         if (from != ClientInfo.UID) return;
 
@@ -433,8 +418,8 @@ public class Player : Damageable
             if (IsSelf)
             {
                 NetworkManager.Instance.SendPacket("others", "add-effect", 
-                    $"{effect.Type.Name}:{effect.Level:0}:{effect.Duration:0.0}:" +
-                    $"{(effect.Caster == null ? null : effect.Caster.ClientInfo.UID)}");
+                    new(effect.Type.Name, effect.Level, effect.Duration,
+                        effect.Caster == null ? null : effect.Caster.ClientInfo.UID));
             }
             else return;
         }
@@ -551,7 +536,7 @@ public class Player : Damageable
 
             if (HP <= 0 && Mode != GameMode.Spectator)
             {
-                NetworkManager.Instance.SendPacket("others", "player-death", "");
+                NetworkManager.Instance.SendPacket("others", "player-death", new(""));
                 OnDeath();
             }
 
@@ -668,6 +653,7 @@ public class Player : Damageable
         MountedWeapon = null;
         for(int i = 0; i < _skills.Length; i++)
         {
+            _skills[i]?.Data.OnReplace(this, _skills[i]);
             _skills[i] = null;
         }
 
@@ -777,7 +763,7 @@ public class Player : Damageable
         {
             if (IsSelf)
             {
-                NetworkManager.Instance.SendPacket("others", "damage-player", $"{amount:0.0}:{(attacker == null ? null : attacker.ClientInfo.UID)}");
+                NetworkManager.Instance.SendPacket("others", "damage-player", new(amount, attacker == null ? null : attacker.ClientInfo.UID));
             }
             else return;
         }
@@ -787,7 +773,7 @@ public class Player : Damageable
     private void SyncHP()
     {
         _beforeHp = HP;
-        NetworkManager.Instance.SendPacket("others", "player-set-hp", string.Format("{0:0.00}", HP));
+        NetworkManager.Instance.SendPacket("others", "player-set-hp", new(HP));
     }
 
     public void SyncMana(float mana)
@@ -798,22 +784,23 @@ public class Player : Damageable
     private void SyncMana()
     {
         _beforeMana = Mana;
-        NetworkManager.Instance.SendPacket("others", "player-set-mana", string.Format("{0:0.00}", Mana));
+        NetworkManager.Instance.SendPacket("others", "player-set-mana", new(Mana));
     }
 
     private void SyncPos()
     {
-        _beforePos = transform.position;
+        var curPos = transform.position;
         NetworkManager.Instance.SendPacket("others", "move-player",
-            string.Format("{0:0.0}:{1:0.0}", transform.position.x, transform.position.y));
+            new((Vector2)curPos));
+        _beforePos = curPos;
     }
 
     private void SyncRot()
     {
-        _beforeRotZ = _playerRenderer.transform.rotation.eulerAngles.z;
+        var curRotZ = _playerRenderer.transform.rotation.eulerAngles.z;
 
-        NetworkManager.Instance.SendPacket("others", "rotate-player",
-            string.Format("{0:0.0}", _beforeRotZ));
+        NetworkManager.Instance.SendPacket("others", "rotate-player", new(curRotZ));
+        _beforeRotZ = curRotZ;
     }
 
     public static Player[] GetPlayers()

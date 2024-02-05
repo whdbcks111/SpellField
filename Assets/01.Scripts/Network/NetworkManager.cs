@@ -5,11 +5,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
-using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -21,7 +19,7 @@ public class NetworkManager : MonoBehaviour
     private readonly byte[] _buffer = new byte[1024];
     private readonly StringBuilder _packetBuilder = new();
     
-    private readonly Dictionary<string, List<Action<string, string>>> _eventMap = new();
+    private readonly Dictionary<string, List<Action<string, Packet>>> _eventMap = new();
     private readonly List<Action<string>> _clientJoinEvents = new();
     private readonly List<Action<string>> _clientLeaveEvents = new();
     private readonly List<Action<string>> _clientJoinFailedEvents = new();
@@ -78,7 +76,12 @@ public class NetworkManager : MonoBehaviour
         catch (ObjectDisposedException) { }
     }
 
-    public void SendPacket(string target, string eventName, string message)
+    public void SendPacket(string target, string eventName, Packet packet)
+    {
+        SendPacket(target, eventName, packet.SerializedMessage);
+    }
+
+    private void SendPacket(string target, string eventName, string message)
     {
         SendPacket(target + ":" + eventName + ":" + message);
     }
@@ -162,7 +165,7 @@ public class NetworkManager : MonoBehaviour
         if (!IsPingDataSetted) throw new Exception("Ping data is not setted.");
         if (!PingData.IsMasterClient) throw new Exception("Set room state in guest client.");
         
-        SendPacket("server", "set-room-state", key + ":" + value);
+        SendPacket("server", "set-room-state", $"{key}:{value}");
         PingData.RoomState[key] = value;
     }
 
@@ -175,13 +178,15 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    public Action On(string eventName, Action<string, string> listener)
+    public Action On(string eventName, Action<string, Packet> listener)
     {
         if (!_eventMap.ContainsKey(eventName))
         {
             _eventMap[eventName] = new();
         }
-        Action<string, string> wrapper = (from, message) => listener(from, message);
+
+        void wrapper(string from, Packet packet) => listener(from, packet);
+
         _eventMap[eventName].Add(wrapper);
         return () => {
             _eventMap[eventName].Remove(wrapper);
@@ -206,16 +211,16 @@ public class NetworkManager : MonoBehaviour
         return () => _clientLeaveEvents.Remove(listener);
     }
 
-    private void OnEvent(string from, string eventName, string message)
+    private void OnEvent(string from, string eventName, Packet packet)
     {
         if (from.Equals("server"))
         {
             switch (eventName)
             {
                 case "room-list":
-                    JArray roomList = JArray.Parse(message);
+                    JArray roomList = JArray.Parse(packet.NextString());
                     RoomInfos = new RoomInfo[roomList.Count];
-                    for(var i = 0; i < roomList.Count; i++)
+                    for (var i = 0; i < roomList.Count; i++)
                     {
                         if (roomList[i].Type != JTokenType.Object) continue;
                         JObject roomInfoJson = (JObject)roomList[i];
@@ -230,7 +235,7 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case "ping":
                     SendPacket("server", "pong", "");
-                    JObject pingData = JObject.Parse(message);
+                    JObject pingData = JObject.Parse(packet.NextString());
                     PingData = new()
                     {
                         Ping = pingData["ping"]?.Type == JTokenType.Integer ? (int)pingData["ping"] : 0,
@@ -243,7 +248,7 @@ public class NetworkManager : MonoBehaviour
                     };
                     if (pingData["room_state"]?.Type == JTokenType.Object)
                     {
-                        foreach(var entry in (JObject)pingData["room_state"])
+                        foreach (var entry in (JObject)pingData["room_state"])
                         {
                             PingData.RoomState.Add(entry.Key, entry.Value.ToString());
                         }
@@ -253,7 +258,7 @@ public class NetworkManager : MonoBehaviour
                         var arr = pingData["clients"].Values<JObject>().ToArray();
                         PingData.Clients = new ClientInfo[arr.Length];
 
-                        for(int i = 0; i < arr.Length; i++)
+                        for (int i = 0; i < arr.Length; i++)
                         {
                             PingData.Clients[i] = new()
                             {
@@ -268,33 +273,38 @@ public class NetworkManager : MonoBehaviour
                 case "join-client":
                     foreach (var joinEvent in _clientJoinEvents)
                     {
-                        joinEvent(message);
+                        joinEvent(packet.NextString());
                     }
                     break;
                 case "join-room-failed":
                     foreach (var joinFailedEvent in _clientJoinFailedEvents)
                     {
-                        joinFailedEvent(message);
+                        joinFailedEvent(packet.NextString());
                     }
                     break;
                 case "leave-client":
                     foreach (var leaveEvent in _clientLeaveEvents)
                     {
-                        leaveEvent(message);
+                        leaveEvent(packet.NextString());
                     }
                     break;
             }
         }
         else
         {
-            if(_eventMap.ContainsKey(eventName))
+            if (_eventMap.ContainsKey(eventName))
             {
-                foreach(var action in _eventMap[eventName])
+                foreach (var action in _eventMap[eventName])
                 {
-                    action(from, message);
+                    action(from, packet);
                 }
             }
         }
+    }
+
+    private void OnEvent(string from, string eventName, string message)
+    {
+        OnEvent(from, eventName, new Packet(message));
     }
 
     private void OnDestroy()

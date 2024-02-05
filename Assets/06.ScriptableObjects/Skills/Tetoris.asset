@@ -30,8 +30,8 @@ MonoBehaviour:
   _baseDamage: 60
   _damageAttackCoefficient: 0.2
   _damageGrowth: 20
-  _baseManaCost: 50
-  _manaCostGrowth: 3
+  _baseManaCost: 20
+  _manaCostGrowth: 1
   _baseCooldown: 1
   _cooldownShrink: 0.2
   _minCooldown: 0.2

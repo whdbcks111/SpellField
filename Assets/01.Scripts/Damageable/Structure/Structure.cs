@@ -56,31 +56,33 @@ public class Structure : Damageable
         _eventDisposeActions.Add(NetworkManager.Instance.On("damage-structure", OnDamageEvent));
     }
 
-    private void OnDamageEvent(string from, string message)
+    private void OnDamageEvent(string _, Packet packet)
     {
-        string[] splitResult = message.Split(':', 3);
-        if (int.TryParse(splitResult[0], out var id) &&
-            StructureId == id &&
-            float.TryParse(splitResult[1], out var amount) &&
-            Player.PlayerMap.TryGetValue(splitResult[2], out var attacker))
+        var targetId = packet.NextInt();
+        var amount = packet.NextFloat();
+        var attackerId = packet.NextString();
+
+        if (StructureId == targetId &&
+            Player.PlayerMap.TryGetValue(attackerId, out var attacker))
         {
             Damage(amount, attacker, true);
         }
     }
 
-    private void OnSetHPEvent(string from, string message)
+    private void OnSetHPEvent(string _, Packet packet)
     {
-        string[] splitResult = message.Split(':', 2);
-        if (int.TryParse(splitResult[0], out var id) && StructureId == id &&
-            float.TryParse(splitResult[1], out var value))
+        var targetId = packet.NextInt();
+        var amount = packet.NextFloat();
+        if (StructureId == targetId)
         {
-            SyncHP(value);
+            SyncHP(amount);
         }
     }
 
-    private void OnDeathEvent(string from, string message)
+    private void OnDeathEvent(string _, Packet packet)
     {
-        if (int.TryParse(message, out var id) && StructureId == id)
+        var targetId = packet.NextInt();
+        if (StructureId == targetId)
         {
             OnDeath();
         }
@@ -98,7 +100,7 @@ public class Structure : Damageable
     private void SyncHP()
     {
         _beforeHp = HP;
-        NetworkManager.Instance.SendPacket("others", "structure-set-hp", $"{StructureId}:{HP:0.000}");
+        NetworkManager.Instance.SendPacket("others", "structure-set-hp", new Packet(StructureId, HP));
     }
 
     protected override void Update()
@@ -119,7 +121,7 @@ public class Structure : Damageable
 
             if (HP <= 0)
             {
-                NetworkManager.Instance.SendPacket("others", "structure-death", $"{StructureId}");
+                NetworkManager.Instance.SendPacket("others", "structure-death", new(StructureId));
                 OnDeath();
             }
         }
@@ -146,7 +148,8 @@ public class Structure : Damageable
         {
             if (NetworkManager.Instance.PingData.IsMasterClient)
             {
-                NetworkManager.Instance.SendPacket("others", "damage-structure", $"{StructureId}:{amount:0.0}:{(attacker == null ? null : attacker.ClientInfo.UID)}");
+                NetworkManager.Instance.SendPacket("others", "damage-structure", 
+                    new(StructureId, amount, attacker == null ? null : attacker.ClientInfo.UID));
             }
             else return;
         }

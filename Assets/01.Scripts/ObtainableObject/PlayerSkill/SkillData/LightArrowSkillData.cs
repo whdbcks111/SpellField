@@ -79,7 +79,7 @@ public class LightArrowSkillData : PlayerSkillData
             Projectile.Shoot(() => GetProjectile(p, skill), p,
                 p.PlayerRenderer.transform.position,
                 p.PlayerRenderer.transform.eulerAngles.z,
-                1, 1, 0, 0f, 1f);
+                1, 0, 1f);
             SoundManager.Instance.PlaySFX(_shootSound, p.transform.position, _shootSoundVolume, _shootSoundPitch);
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         }

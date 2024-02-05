@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public abstract class Projectile : MonoBehaviour
 {
-    public Player Owner;
+    [HideInInspector] public Player Owner;
     public Vector2 Direction
     {
         get => _direction;
@@ -83,27 +83,16 @@ public abstract class Projectile : MonoBehaviour
     }
 
     public static void Shoot(Func<Projectile> projectileGetter, Player owner, Vector3 pos, float baseAngle,
-        int shootCount, int angleCount, float angleSpan, float shootTimeSpan, float forward = 0f)
+        int angleCount, float angleSpan, float forward = 0f)
     {
-        ShootTask(projectileGetter, owner, pos, baseAngle, 
-            shootCount, angleCount, angleSpan, shootTimeSpan, forward).Forget();
-    }
-
-    private static async UniTask ShootTask(Func<Projectile> projectileGetter, Player owner, Vector3 pos, float baseAngle, 
-        int shootCount, int angleCount, float angleSpan, float shootTimeSpan, float forward)
-    {
-        for (int i = 0; i < shootCount; i++)
+        for (int j = 0; j < angleCount; j++)
         {
-            for (int j = 0; j < angleCount; j++)
-            {
-                float angle = (j - (angleCount - 1) / 2f) * angleSpan + baseAngle;
-                var projectile = projectileGetter();
-                projectile.Angle = angle;
-                projectile.transform.position = pos;
-                projectile.transform.position += (Vector3)projectile.Direction * forward;
-                projectile.Owner = owner;
-            }
-            await UniTask.Delay(TimeSpan.FromSeconds(shootTimeSpan));
+            float angle = (j - (angleCount - 1) / 2f) * angleSpan + baseAngle;
+            var projectile = projectileGetter();
+            projectile.Angle = angle;
+            projectile.transform.position = pos;
+            projectile.transform.position += (Vector3)projectile.Direction * forward;
+            projectile.Owner = owner;
         }
     }
 

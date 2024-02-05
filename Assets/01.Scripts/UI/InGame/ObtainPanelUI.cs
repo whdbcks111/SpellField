@@ -135,7 +135,8 @@ public class ObtainPanelUI : MonoBehaviour
                     else playerSkills[targetIdx].Level++;
 
                     var newSkill = GameManager.Instance.SelfPlayer.GetSkills()[targetIdx];
-                    NetworkManager.Instance.SendPacket("others", "change-skill", targetIdx + ":" + newSkill.Data.Name + ":" + newSkill.Level);
+                    NetworkManager.Instance.SendPacket("others", "change-skill", 
+                        new(targetIdx, newSkill.Data.Name, newSkill.Level));
                     Close();
                 };
             }
@@ -147,7 +148,7 @@ public class ObtainPanelUI : MonoBehaviour
                 {
                     GameManager.Instance.SelfPlayer.MountedWeapon = new Weapon(weaponData);
 
-                    NetworkManager.Instance.SendPacket("others", "change-weapon", weaponData.Name);
+                    NetworkManager.Instance.SendPacket("others", "change-weapon", new(weaponData.Name));
                     Close();
                 };
             }

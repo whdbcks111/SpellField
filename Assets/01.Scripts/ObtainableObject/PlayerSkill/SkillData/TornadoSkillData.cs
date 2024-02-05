@@ -88,7 +88,7 @@ public class TornadoSkillData : PlayerSkillData
         Projectile.Shoot(() => GetProjectile(p, skill), p, 
             p.PlayerRenderer.transform.position, 
             p.PlayerRenderer.transform.eulerAngles.z,
-            1, GetAngleCount(p, skill), 360f / GetAngleCount(p, skill), 0f, 1f);
+            GetAngleCount(p, skill), 360f / GetAngleCount(p, skill), 1f);
     }
 
     public override void OnPassiveUpdate(Player p, PlayerSkill skill)

@@ -77,7 +77,7 @@ public class TetorisSkillData : PlayerSkillData
         Projectile.Shoot(() => GetProjectile(p, skill), p, 
             p.PlayerRenderer.transform.position, 
             p.PlayerRenderer.transform.eulerAngles.z,
-            1, 1, 0, 0f, 1f);
+            1, 0, 1f);
     }
 
     public override void OnPassiveUpdate(Player p, PlayerSkill skill)

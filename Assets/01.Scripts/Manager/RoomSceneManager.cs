@@ -35,7 +35,7 @@ public class RoomSceneManager : MonoBehaviour
         GameManager.Instance.StartGame();
     }
 
-    private void OnPlayerReady(string from, string message)
+    private void OnPlayerReady(string from, Packet _)
     {
         if (NetworkManager.Instance.PingData.RoomState.ContainsKey("ready__" + from))
         {

@@ -58,7 +58,7 @@ public class PlayerSkill
             }
             p.Mana -= Data.GetManaCost(p, this);
             CurrentCooldown = Data.GetCooldown(p, this);
-            NetworkManager.Instance.SendPacket("others", "start-charge-skill", Data.Name);
+            NetworkManager.Instance.SendPacket("others", "start-charge-skill", new(Data.Name));
         }
         IsCharging = true;
         ChargeTime = 0f;
@@ -71,7 +71,7 @@ public class PlayerSkill
         IsCharging = false;
         if(p.IsSelf)
         {
-            NetworkManager.Instance.SendPacket("others", "active-skill", Data.Name);
+            NetworkManager.Instance.SendPacket("others", "active-skill", new(Data.Name));
             CurrentCooldown = Data.GetCooldown(p, this);
         }
         

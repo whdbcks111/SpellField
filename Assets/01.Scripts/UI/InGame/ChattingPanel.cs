@@ -64,7 +64,7 @@ public class ChattingPanel : MonoBehaviour
         if (text.Trim().Length > 0)
         {
             NetworkManager.Instance.SendPacket("all", "chat",
-                $"[{NetworkManager.Instance.PingData.Nickname}] {text.Replace('\0', '\n')}");
+                new($"[{NetworkManager.Instance.PingData.Nickname}] {text.Replace('\0', '\n')}"));
         }
         if (EventSystem.current.currentSelectedGameObject != null)
             EventSystem.current.SetSelectedGameObject(null);

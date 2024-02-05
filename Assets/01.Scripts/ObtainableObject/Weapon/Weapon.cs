@@ -62,7 +62,7 @@ public class Weapon
                 return;
             }
             CurrentCooldown = Data.Cooldown;
-            NetworkManager.Instance.SendPacket("others", "use-weapon", "");
+            NetworkManager.Instance.SendPacket("others", "use-weapon", new(""));
             Data.Use(p, this);
         }
         else Data.Use(p, this);

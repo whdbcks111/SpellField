@@ -71,14 +71,14 @@ public class RoomPlayerListUI : MonoBehaviour
 
     public void Ready()
     {
-        NetworkManager.Instance.SendPacket("master", "ready", "");
+        NetworkManager.Instance.SendPacket("master", "ready", new(""));
     }
 
     public void StartGame()
     {
         NetworkManager.Instance.SetRoomState("is_started", "");
         NetworkManager.Instance.SetRoomState("server_seed", Random.Range(int.MinValue, int.MaxValue).ToString());
-        NetworkManager.Instance.SendPacket("all", "start-game", "");
+        NetworkManager.Instance.SendPacket("all", "start-game", new(""));
     }
 
     public void StartSingleGame()

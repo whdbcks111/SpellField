@@ -15,9 +15,9 @@ public class RoomChattingPanel : MonoBehaviour
 
     private void Start()
     {
-        _chatEventDispose = NetworkManager.Instance.On("room-chat", (from, message) =>
+        _chatEventDispose = NetworkManager.Instance.On("room-chat", (_, packet) =>
         {
-            AddChat(message);
+            AddChat(packet.NextString());
         });
     }
 
@@ -30,7 +30,8 @@ public class RoomChattingPanel : MonoBehaviour
     {
         var text = _inputField.text;
         if (text.Trim().Length == 0) return;
-        NetworkManager.Instance.SendPacket("all", "room-chat", $"[{NetworkManager.Instance.PingData.Nickname}] {text.Replace('\0', '\n')}");
+        NetworkManager.Instance.SendPacket("all", "room-chat", 
+            new($"[{NetworkManager.Instance.PingData.Nickname}] {text.Replace('\0', '\n')}"));
 
         _inputField.selectionStringAnchorPosition = 0;
         _inputField.text = "";
