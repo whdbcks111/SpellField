@@ -271,21 +271,24 @@ public class NetworkManager : MonoBehaviour
                     IsPingDataSetted = true;
                     break;
                 case "join-client":
+                    var joinedId = packet.NextString();
                     foreach (var joinEvent in _clientJoinEvents)
                     {
-                        joinEvent(packet.NextString());
+                        joinEvent(joinedId);
                     }
                     break;
                 case "join-room-failed":
+                    var joinFailedReason = packet.NextString();
                     foreach (var joinFailedEvent in _clientJoinFailedEvents)
                     {
-                        joinFailedEvent(packet.NextString());
+                        joinFailedEvent(joinFailedReason);
                     }
                     break;
                 case "leave-client":
+                    var leftId = packet.NextString();
                     foreach (var leaveEvent in _clientLeaveEvents)
                     {
-                        leaveEvent(packet.NextString());
+                        leaveEvent(leftId);
                     }
                     break;
             }
@@ -296,6 +299,7 @@ public class NetworkManager : MonoBehaviour
             {
                 foreach (var action in _eventMap[eventName])
                 {
+                    packet.ResetRead();
                     action(from, packet);
                 }
             }

@@ -252,15 +252,23 @@ public class Player : Damageable
         _eventDisposeActions.Add(NetworkManager.Instance.On("player-death", OnDeathEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("rotate-player", OnRotateEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("player-set-hp", OnSetHPEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("player-set-shield", OnSetShieldEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("player-set-mana", OnSetManaEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("active-skill", OnActiveSkillEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("add-effect", OnAddEffectEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("add-shield", OnAddShieldEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("damage-player", OnDamageEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("player-damage-tint", OnDamageTintEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("start-charge-skill", OnStartChargeSkillEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("use-weapon", OnUseWeaponEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("change-weapon", OnChangeWeaponEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("change-skill", OnChangeSkillEvent));
+    }
+
+    private void OnDamageTintEvent(string from, Packet packet)
+    {
+        if (from != ClientInfo.UID) return;
+        ShowDamageTint();
     }
 
     private void OnChangeWeaponEvent(string from, Packet packet)
@@ -368,7 +376,11 @@ public class Player : Damageable
     {
         if (from != ClientInfo.UID) return;
 
-        _smoothPos = packet.NextVector2();
+        var receivedPos = packet.NextVector2();
+        var receivedVel = packet.NextVector2();
+        var receivedPing = packet.NextInt();
+
+        _smoothPos = receivedPos + receivedVel * ((receivedPing + NetworkManager.Instance.PingData.Ping) / 2000f);
     }
 
     private void OnSetHPEvent(string from, Packet packet)
@@ -376,6 +388,13 @@ public class Player : Damageable
         if (from != ClientInfo.UID) return;
 
         SyncHP(packet.NextFloat());
+    }
+
+    private void OnSetShieldEvent(string from, Packet packet)
+    {
+        if (from != ClientInfo.UID) return;
+
+        SyncShield(packet.NextFloat());
     }
 
     private void OnSetManaEvent(string from, Packet packet)
@@ -745,11 +764,24 @@ public class Player : Damageable
         _smoothRotZ = z;
     }
 
+    public void ShowDamageTint()
+    {
+        _damageTintTimer = _damageTintTime;
+    }
+
     public override void Damage(AttackParams attackParams, Player attacker = null, bool showDamage = true)
     {
         base.Damage(attackParams, attacker, showDamage && IsSelf);
-        if (showDamage) _damageTintTimer = _damageTintTime;
-        if(IsSelf) GameManager.Instance.UIManager.ShowDamageScreen();
+        if(IsSelf)
+        {
+            if (showDamage)
+            {
+                ShowDamageTint();
+                NetworkManager.Instance.SendPacket("others", "player-damage-tint", new());
+            }
+            if (IsSelf) GameManager.Instance.UIManager.ShowDamageScreen();
+
+        }
     }
 
     public override void Damage(float amount, Player attacker = null)
@@ -763,7 +795,8 @@ public class Player : Damageable
         {
             if (IsSelf)
             {
-                NetworkManager.Instance.SendPacket("others", "damage-player", new(amount, attacker == null ? null : attacker.ClientInfo.UID));
+                NetworkManager.Instance.SendPacket("others", "damage-player", 
+                    new(amount, attacker == null ? null : attacker.ClientInfo.UID));
             }
             else return;
         }
@@ -790,8 +823,9 @@ public class Player : Damageable
     private void SyncPos()
     {
         var curPos = transform.position;
+        var velocity = (curPos - _beforePos) / SyncDelay;
         NetworkManager.Instance.SendPacket("others", "move-player",
-            new((Vector2)curPos));
+            new((Vector2)curPos, (Vector2)velocity, NetworkManager.Instance.PingData.Ping));
         _beforePos = curPos;
     }
 

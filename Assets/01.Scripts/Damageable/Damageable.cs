@@ -63,6 +63,11 @@ public class Damageable : MonoBehaviour
         });
     }
 
+    public virtual void RemoveAllShield()
+    {
+        _shields.Clear();
+    }
+
     public void RunOnceLateUpdate(Action action)
     {
         _lateTasks.Enqueue(action);
@@ -71,6 +76,12 @@ public class Damageable : MonoBehaviour
     public void SyncHP(float hp)
     {
         this.hp = hp;
+    }
+
+    public void SyncShield(float amount)
+    {
+        RemoveAllShield();
+        if(amount > 0.01f) AddShield(amount, 10f);
     }
 
     protected virtual void Start()
