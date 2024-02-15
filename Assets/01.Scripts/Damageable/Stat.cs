@@ -253,6 +253,27 @@ public struct AttackParams
     public float Penetrate;
     public float Damage;
     public DamageType DamageType;
+
+    public readonly void WritePacket(Packet packet)
+    {
+        packet.WriteFloat(CriticalChance);
+        packet.WriteFloat(CriticalDamage);
+        packet.WriteFloat(Penetrate);
+        packet.WriteFloat(Damage);
+        packet.WriteString(DamageType.Name);
+    }
+
+    public static AttackParams ReadPacket(Packet packet)
+    {
+        return new()
+        {
+            CriticalChance = packet.NextFloat(),
+            CriticalDamage = packet.NextFloat(),
+            Penetrate = packet.NextFloat(),
+            Damage = packet.NextFloat(),
+            DamageType = DamageType.GetByName(packet.NextString())
+        };
+    }
 }
 
 public class DamageType : Enumeration<DamageType>

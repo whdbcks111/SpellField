@@ -305,6 +305,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - weapons
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 633cfb2b3630b7e4c8b8e519bf516dab
+    m_Address: Assets/06.ScriptableObjects/Weapons/Bloody Night.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - weapons
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b545a273754a74742940592b152ec63e, type: 2}
   m_SchemaSet:

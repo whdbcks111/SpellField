@@ -258,6 +258,7 @@ public class Player : Damageable
         _eventDisposeActions.Add(NetworkManager.Instance.On("add-effect", OnAddEffectEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("add-shield", OnAddShieldEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("damage-player", OnDamageEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("params-damage-player", OnParamsDamageEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("player-damage-tint", OnDamageTintEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("start-charge-skill", OnStartChargeSkillEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("use-weapon", OnUseWeaponEvent));
@@ -332,6 +333,19 @@ public class Player : Damageable
         if (PlayerMap.TryGetValue(attackerId, out var attacker))
         {
             Damage(amount, attacker, true);
+        }
+    }
+
+    private void OnParamsDamageEvent(string from, Packet packet)
+    {
+        if (from != ClientInfo.UID) return;
+        var attackParams = AttackParams.ReadPacket(packet);
+        var attackerId = packet.NextString();
+        var showDamage = packet.NextBool();
+
+        if (PlayerMap.TryGetValue(attackerId, out var attacker))
+        {
+            Damage(attackParams, attacker, showDamage, true);
         }
     }
 
@@ -769,24 +783,38 @@ public class Player : Damageable
         _damageTintTimer = _damageTintTime;
     }
 
+    public void Damage(AttackParams attackParams, Player attacker = null, bool showDamage = true, bool sync = false)
+    {
+        if(!sync)
+        {
+            if (IsSelf)
+            {
+                GameManager.Instance.UIManager.ShowDamageScreen();
+
+                Packet packet = new();
+                attackParams.WritePacket(packet);
+                packet.WriteString(attacker == null ? "" : attacker.ClientInfo.UID);
+                packet.WriteBool(showDamage);
+                NetworkManager.Instance.SendPacket("others", "params-damage-player", packet);
+            }
+            else return;
+        }
+
+        if (showDamage)
+        {
+            ShowDamageTint();
+        }
+        base.Damage(attackParams, attacker, showDamage && IsSelf);
+    }
+
     public override void Damage(AttackParams attackParams, Player attacker = null, bool showDamage = true)
     {
-        base.Damage(attackParams, attacker, showDamage && IsSelf);
-        if(IsSelf)
-        {
-            if (showDamage)
-            {
-                ShowDamageTint();
-                NetworkManager.Instance.SendPacket("others", "player-damage-tint", new());
-            }
-            if (IsSelf) GameManager.Instance.UIManager.ShowDamageScreen();
-
-        }
+        Damage(attackParams, attacker, showDamage, false);
     }
 
     public override void Damage(float amount, Player attacker = null)
     {
-        Damage(amount, attacker, true);
+        Damage(amount, attacker, false);
     }
 
     public void Damage(float amount, Player attacker = null, bool sync = false)
@@ -796,7 +824,7 @@ public class Player : Damageable
             if (IsSelf)
             {
                 NetworkManager.Instance.SendPacket("others", "damage-player", 
-                    new(amount, attacker == null ? null : attacker.ClientInfo.UID));
+                    new(amount, attacker == null ? "" : attacker.ClientInfo.UID));
             }
             else return;
         }

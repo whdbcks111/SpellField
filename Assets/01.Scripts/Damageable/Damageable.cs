@@ -5,14 +5,16 @@ using System;
 
 public class Damageable : MonoBehaviour
 {
-    public readonly Stat Stat = new();
-    private readonly List<ShieldAmount> _shields = new();
     [SerializeField] protected HPBar hpBar;
     [SerializeField] private AudioClip DamageSound;
     [SerializeField] private float _damageSoundPitch = 1f;
+
+    public readonly Stat Stat = new();
     [HideInInspector] public Player LastAttacker = null;
 
-    private readonly Queue<Action> _lateTasks = new(); 
+    private readonly Queue<Action> _lateTasks = new();
+    private readonly List<ShieldAmount> _shields = new();
+    private readonly List<Func<DamageParams, DamageParams>> _damageMiddlewares = new(), _oneShotDamageMiddlewares = new();
 
     protected float hp = StatType.MaxHP.DefaultValue;
     public virtual float HP
@@ -101,9 +103,33 @@ public class Damageable : MonoBehaviour
         hpBar.Shield = ShieldAmount;
     }
 
+    public void AddDamageMiddleware(Func<DamageParams, DamageParams> middleware, bool isOneShot = false)
+    {
+        if(isOneShot)
+            _oneShotDamageMiddlewares.Add(middleware);
+        else 
+            _damageMiddlewares.Add(middleware);
+    }
+
+    public void RemoveDamageMiddleware(Func<DamageParams, DamageParams> middleware)
+    {
+        _damageMiddlewares.Remove(middleware);
+    }
+
     public virtual void Damage(AttackParams attackParams, Player attacker = null, bool showDamage = true)
     {
         DamageParams damageParams = Stat.GetDamageParams(attackParams, this);
+
+        foreach (var damageMiddleware in _damageMiddlewares)
+        {
+            damageParams = damageMiddleware(damageParams);
+        }
+        foreach (var damageMiddleware in _oneShotDamageMiddlewares)
+        {
+            damageParams = damageMiddleware(damageParams);
+        }
+        _oneShotDamageMiddlewares.Clear();
+
         Damage(damageParams.TotalDamage, attacker);
 
         SoundManager.Instance.PlaySFX(DamageSound, transform.position, 0.5f, _damageSoundPitch * UnityEngine.Random.Range(0.9f, 1.1f));

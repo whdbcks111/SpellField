@@ -54,6 +54,7 @@ public class Structure : Damageable
         _eventDisposeActions.Add(NetworkManager.Instance.On("structure-set-hp", OnSetHPEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("structure-death", OnDeathEvent));
         _eventDisposeActions.Add(NetworkManager.Instance.On("damage-structure", OnDamageEvent));
+        _eventDisposeActions.Add(NetworkManager.Instance.On("params-damage-structure", OnParamsDamageEvent));
     }
 
     private void OnDamageEvent(string _, Packet packet)
@@ -66,6 +67,20 @@ public class Structure : Damageable
             Player.PlayerMap.TryGetValue(attackerId, out var attacker))
         {
             Damage(amount, attacker, true);
+        }
+    }
+
+    private void OnParamsDamageEvent(string _, Packet packet)
+    {
+        var targetId = packet.NextInt();
+        var attackParams = AttackParams.ReadPacket(packet);
+        var attackerId = packet.NextString();
+        var showDamage = packet.NextBool();
+
+        if (StructureId == targetId &&
+            Player.PlayerMap.TryGetValue(attackerId, out var attacker))
+        {
+            Damage(attackParams, attacker, showDamage, true);
         }
     }
 
@@ -132,14 +147,33 @@ public class Structure : Damageable
         Destroy(gameObject);
     }
 
+    public void Damage(AttackParams attackParams, Player attacker = null, bool showDamage = true, bool sync = false)
+    {
+        if (!sync)
+        {
+            if (NetworkManager.Instance.PingData.IsMasterClient)
+            {
+                Packet packet = new();
+                packet.WriteInt(StructureId);
+                attackParams.WritePacket(packet);
+                packet.WriteString(attacker == null ? "" : attacker.ClientInfo.UID);
+                packet.WriteBool(showDamage);
+
+                NetworkManager.Instance.SendPacket("others", "params-damage-structure", packet);
+            }
+            else return;
+        }
+        base.Damage(attackParams, attacker, showDamage && NetworkManager.Instance.PingData.IsMasterClient);
+    }
+
     public override void Damage(AttackParams attackParams, Player attacker = null, bool showDamage = true)
     {
-        base.Damage(attackParams, attacker, showDamage && NetworkManager.Instance.PingData.IsMasterClient);
+        Damage(attackParams, attacker, showDamage, false);
     }
 
     public override void Damage(float amount, Player attacker = null)
     {
-        Damage(amount, attacker, true);
+        Damage(amount, attacker, false);
     }
 
     public void Damage(float amount, Player attacker = null, bool sync = false)
@@ -149,7 +183,7 @@ public class Structure : Damageable
             if (NetworkManager.Instance.PingData.IsMasterClient)
             {
                 NetworkManager.Instance.SendPacket("others", "damage-structure", 
-                    new(StructureId, amount, attacker == null ? null : attacker.ClientInfo.UID));
+                    new(StructureId, amount, attacker == null ? "" : attacker.ClientInfo.UID));
             }
             else return;
         }

@@ -35,6 +35,12 @@ public class Packet
         return this;
     }
 
+    public Packet WriteBool(bool b)
+    {
+        WriteString(b ? "1" : "0");
+        return this;
+    }
+
     public Packet WriteInt(int i)
     {
         WriteString(i.ToString());
@@ -74,6 +80,11 @@ public class Packet
         string data = NextString();
         if (int.TryParse(data, out int i)) return i;
         throw new System.Exception("Parse failed for type: int");
+    }
+
+    public bool NextBool()
+    {
+        return NextString() == "1";
     }
 
     public float NextFloat()

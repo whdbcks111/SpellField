@@ -33,12 +33,12 @@ MonoBehaviour:
     Value: 10
   _projectilePrefab: {fileID: 4783018341602425951, guid: 3140423401e687e499b738d0a1b00ab6, type: 3}
   _isMagicAttack: 0
-  _baseDamage: 15
+  _baseDamage: 20
   _statMultiply: 0.2
   _shootCount: 2
   _angleCount: 2
   _angleSpan: 10
-  _shootTimeSpan: 0.3
+  _shootTimeSpan: 0.2
   _activeSound: {fileID: 8300000, guid: 7f2f78482bb2c1d40a6d068035ccca2b, type: 3}
-  _activeSoundVolume: 1
-  _activeSoundPitch: 1.35
+  _activeSoundVolume: 0.6
+  _activeSoundPitch: 0.8

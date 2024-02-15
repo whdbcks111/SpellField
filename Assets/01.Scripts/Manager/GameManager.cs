@@ -229,7 +229,7 @@ public class GameManager : MonoBehaviour
             _obtainTime -= _obtainSpan;
             foreach (var p in Player.GetPlayers())
             {
-                p.AddShield(p.MaxHP, 10f);
+                p.AddShield(p.MaxHP, Mathf.Min(_obtainSpan / 3f, 10f));
             }
             ObtainableCount++;
         }
